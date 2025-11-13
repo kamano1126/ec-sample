@@ -2,22 +2,52 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>商品一覧</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-50">
 <div th:replace="layout/header :: siteHeader"></div>
 
-<h1>商品一覧</h1>
-<table border="1">
-    <tr>
-        <th>ID</th><th>商品名</th><th>価格</th><th>説明</th>
-    </tr>
-    <tr th:each="product : ${products}">
-        <td> <a th:href="@{'/products/' + ${product.id}}" th:text="${product.id}"></a></td>
-        <td th:text="${product.name}"></td>
-        <td th:text="${product.price} + '円'"></td>
-        <td th:text="${product.description}"></td>
-    </tr>
-</table>
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">新商品</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div th:each="product : ${products}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <!-- 商品画像プレースホルダー -->
+            <!-- TODO: 画像に置き換え -->
+            <div class="w-full h-64 bg-gray-300 flex items-center justify-center">
+                <span class="text-gray-500 text-sm">画像</span>
+            </div>
+            
+            <!-- 商品情報 -->
+            <div class="p-4">
+                <!-- カテゴリ -->
+                <div class="text-xs font-semibold text-gray-600 uppercase mb-2" th:text="${product.category}"></div>
+                
+                <!-- 商品説明 -->
+                <div class="text-sm text-gray-900 mb-3 line-clamp-3" th:text="${product.description}"></div>
+                
+                <!-- 価格 -->
+                <div class="text-lg font-bold text-gray-900 mb-4">
+                    <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                    <span class="text-sm font-normal">円</span>
+                    <span class="text-sm font-normal text-gray-600">(税込)</span>
+                </div>
+                
+                <!-- ボタン -->
+                <div th:if="${product.stock != null and product.stock > 0}">
+                    <button class="w-full bg-green-400 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition-colors">
+                        カートに入れる
+                    </button>
+                </div>
+                <div th:if="${product.stock == null or product.stock == 0}">
+                    <button class="w-full bg-gray-400 text-white font-medium py-2 px-4 rounded cursor-not-allowed" disabled>
+                        売り切れ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

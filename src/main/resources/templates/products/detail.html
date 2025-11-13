@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品詳細</title>
+</head>
+<body>
+<table border="1">
+    <div th:replace="layout/header :: siteHeader"></div>
+    <h1 th:text ="${product.id} + 'の詳細'"></h1>
+    <tr>
+        <th>ID</th><td th:text="${product.id}"></td>
+    </tr>
+    <tr>
+        <th>商品名</th><td th:text="${product.name"></td>
+    </tr>
+    <tr>
+        <th>価格</th><td th:text="${product.price} + '円'"></td>
+    </tr>
+    <tr>
+        <th>説明</th><td th:text="${product.description}"></td>
+    </tr>
+</table>
+<p><a href="/products">←　商品一覧に戻る</a></p>
+</body>
+</html>
