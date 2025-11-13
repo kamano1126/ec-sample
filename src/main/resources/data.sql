@@ -16,3 +16,9 @@ VALUES (5, 'スエードジャケット', 37000, 'ポロカンのスエードジ
 INSERT INTO product (id, name, price, description,stock,size,category,period,bland)
 VALUES (6, 'ダブルニーダックパンツ', 22000, '70s　カーハートのダブルニー',1,'38','pants','70s','carhart');
 
+INSERT INTO product (id, name, price, description,stock,size,category,period,bland)
+VALUES (7, 'フリース', 15000, 'mont-bellのフリース',1,'L','light outer','regular','montbell');
+
+INSERT INTO product (id, name, price, description,stock,size,category,period,bland)
+VALUES (8, '70s FFAジャケット', 32000, '70s　FFAジャケット　テネシー',1,'42','light outer','70s','FFA');
+

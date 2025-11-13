@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品アップロード</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 flex justify-center items-center h-screen">
+
+<div class="bg-white p-8 rounded-2xl shadow-md w-96">
+    <h1 class="text-2xl font-semibold mb-6 text-center">商品アップロード</h1>
+
+    <form th:action="@{/products/upload}" method="post" enctype="multipart/form-data">
+        <div class="mb-4">
+            <label class="block mb-2 font-medium text-gray-700">商品名</label>
+            <input type="text" name="name" class="border rounded w-full p-2" required>
+        </div>
+
+        <div class="mb-4">
+            <label class="block mb-2 font-medium text-gray-700">画像</label>
+            <input type="file" name="file" class="border rounded w-full p-2" required>
+        </div>
+
+        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">アップロード</button>
+    </form>
+
+    <div class="mt-4 text-center">
+        <a href="/products" class="text-blue-500 hover:underline">一覧に戻る</a>
+    </div>
+</div>
+
+</body>
+</html>
