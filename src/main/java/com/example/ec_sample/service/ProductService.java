@@ -17,6 +17,6 @@ public class ProductService {
     }
 
     public Product findByID(Long id){
-        return productRepository.findByID(id).orElseThrow(() -> new IllegalArgumentException("指定された商品が見つかりません: id=" +id));
+        return productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("指定された商品が見つかりません: id=" +id));
     }
 }
