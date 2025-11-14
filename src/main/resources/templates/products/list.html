@@ -8,15 +8,22 @@
 </head>
 <body class="bg-gray-50">
 <div th:replace="layout/header :: siteHeader"></div>
-
+<!--TODO:画像登録するボタンを管理者ページで表示する -->
+<div class="flex justify-end mb-4">
+    <a href="/upload"
+       class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+        画像を登録する
+    </a>
+</div>
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">新商品</h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div th:each="product : ${products}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
             <!-- 商品画像プレースホルダー -->
-            <!-- TODO: 画像に置き換え -->
             <div class="w-full h-64 bg-gray-300 flex items-center justify-center">
-                <span class="text-gray-500 text-sm">画像</span>
+                <img th:src="${product.imagePath}"
+                     alt="商品画像"
+                     class="w-full h-40 object-cover rounded-lg mb-3"/>
             </div>
             
             <!-- 商品情報 -->

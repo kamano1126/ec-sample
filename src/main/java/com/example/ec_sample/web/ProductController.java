@@ -39,8 +39,11 @@ public class ProductController {
     }
 
     @PostMapping("/upload")
-    public String uploadProduct(@RequestParam("name")String name, @RequestParam("file")MultipartFile file)throws Exception{
-        productService.saveProduct(name,file);
-        return  "redirect://products";
+    public String uploadProduct(
+            @RequestParam("productId") Long productId,
+            @RequestParam("file") MultipartFile file) throws Exception {
+
+        productService.attachImageToProduct(productId, file);
+        return "redirect:/products/" + productId;
     }
 }
