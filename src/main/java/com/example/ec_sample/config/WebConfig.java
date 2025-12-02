@@ -12,6 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry){
         // /images/**へのアクセスをローカルフォルダにマッピング
-        registry.addResourceHandler("/images/**").addResourceLocations("file:///C:/upload-images/");
+        registry.addResourceHandler("/images/**").addResourceLocations("file:images/");
     }
 }

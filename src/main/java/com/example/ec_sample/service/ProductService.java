@@ -19,7 +19,7 @@ import java.util.UUID;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final String uploadDir = "C:/upload-images/";  //プロジェクト外の安全な保存場所に画像を保存する
+    private final String uploadDir = "images/";  //プロジェクト外の安全な保存場所に画像を保存する
 
 
     public List<Product> findAll() {
