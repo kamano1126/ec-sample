@@ -19,6 +19,13 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @GetMapping("/")
+    public String home(Model model) {
+        List<Product> products = productService.findAll();
+        model.addAttribute("products", products);
+        return "products/list";
+    }
+
     @GetMapping("/products")
     public String showProductList(Model model) {
         List<Product> products = productService.findAll();
@@ -44,6 +51,7 @@ public class ProductController {
             @RequestParam("file") MultipartFile file) throws Exception {
 
         productService.attachImageToProduct(productId, file);
+        //System.out.println("ファイル" + file);
         return "redirect:/products/" + productId;
     }
 }

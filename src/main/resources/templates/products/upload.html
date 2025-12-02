@@ -10,7 +10,7 @@
 <div class="bg-white p-8 rounded-2xl shadow-md w-96">
     <h1 class="text-2xl font-semibold mb-6 text-center">商品アップロード</h1>
 
-    <form th:action="@{/products/upload}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
         <!-- 商品ID -->
         <label class="block">
             <span class="text-gray-700">商品ID</span>
@@ -21,7 +21,7 @@
         <!-- 画像 -->
         <div class="mb-4">
             <label class="block mb-2 font-medium text-gray-700">画像</label>
-            <input type="file" name="file" class="border rounded w-full p-2" required>
+            <input type="file" name="file" class="w-64 h-64 object-cover rounded" required>
         </div>
 
         <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">アップロード</button>

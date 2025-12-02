@@ -41,7 +41,7 @@ public class ProductService {
 
         // 3. 保存パスを作成
         Path filePath = Paths.get(uploadDir + fileName);
-        Files.createDirectories(filePath.getParent());
+        Files.createDirectories(filePath.getParent());  //フォルダがなかったら作る
 
         // 4. 画像ファイルを保存
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
