@@ -1,0 +1,21 @@
+package com.example.ec_sample.domain.product;
+
+public enum Brand {
+    LEVIS("LEVI'S"),
+    USARMY("U.S.ARMY"),
+    LLBEAN("L.L.BEAN"),
+    CARHART("carhart"),
+    MONTBELL("mont-BELL"),
+    noBrand("ノーブランド"),
+    FFA("FFA");
+
+    private final String label;
+
+    Brand(String label){
+        this.label = label;
+    }
+
+    public String getLabel(){
+        return label;
+    }
+}

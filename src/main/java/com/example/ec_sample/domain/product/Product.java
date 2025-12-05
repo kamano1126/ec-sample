@@ -35,14 +35,17 @@ public class Product {
 
     private Integer stock;
 
-    private String size;
+    @Enumerated(EnumType.STRING)
+    private Size size;
 
-    //"category","period"をenumに変更する(絞り込みできるようにするため)
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
-    private String period;
+    @Enumerated(EnumType.STRING)
+    private Period period;
 
-    private String brand;
+    @Enumerated(EnumType.STRING)
+    private Brand brand;
 
     @Column(name = "join_date")
     private LocalDate joinDate;
