@@ -7,7 +7,8 @@ public enum Brand {
     CARHART("carhart"),
     MONTBELL("mont-BELL"),
     noBrand("ノーブランド"),
-    FFA("FFA");
+    FFA("FFA"),
+    POLO("POLO COUNTRY");
 
     private final String label;
 

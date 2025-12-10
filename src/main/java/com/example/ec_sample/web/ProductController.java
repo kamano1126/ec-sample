@@ -54,4 +54,6 @@ public class ProductController {
         //System.out.println("ファイル" + file);
         return "redirect:/products/" + productId;
     }
+
+
 }

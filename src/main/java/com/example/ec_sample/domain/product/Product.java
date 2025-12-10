@@ -1,10 +1,10 @@
 package com.example.ec_sample.domain.product;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.aspectj.bridge.IMessage;
 
 
@@ -24,10 +24,12 @@ public class Product {
 //＠NotBlank、＠NotNullを使えるようにする
 //メッセージ”商品名は必須です”等を表示させる
     @Column(nullable = false)
+    @NotBlank(message = "商品名は必須です")
     private String name;
 
     @Column(name = "image_path")
     private String imagePath;
+
 
     private Integer price;
 
@@ -35,10 +37,10 @@ public class Product {
 
     private Integer stock;
 
-    @Enumerated(EnumType.STRING)
-    private Size size;
+    private String size;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "カテゴリーは必須です")
     private Category category;
 
     @Enumerated(EnumType.STRING)
