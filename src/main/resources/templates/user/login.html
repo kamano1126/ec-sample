@@ -10,6 +10,11 @@
 <div class="max-w-md mx-auto mt-20 p-8 bg-white shadow-lg rounded">
     <h1 class="text-2xl font-bold mb-6 text-center">ユーザー登録</h1>
 
+<!-- TODO　エラー表示の内容をログイン用に変換する。loginForm.javaを作ってコントローラー側でエラーの値を渡す。その値をth:errorsで受け取ってエラー表示を出す -->
+
+    <p class="text-red-500 text-sm" th:if="${hasErrors('email','password','username')}"
+       th:errors=""></p>
+
     <form th:action="@{/users/register}" th:object="${user}" method="post" class="space-y-4">
 
 
@@ -18,8 +23,8 @@
             <label class="block mb-1">ユーザー名</label>
             <input type="text" th:field="*{username}"
                    class="w-full p-2 border rounded">
-        <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('username')}"
-           th:errors="*{username}"></p>
+            <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('username')}"
+               th:errors="*{username}"></p>
         </div>
 
         <!-- メールアドレス -->
@@ -29,8 +34,7 @@
                    class="w-full p-2 border rounded">
             <p class="text-red-500 text-sm" th:if="${emailError}"
                th:text="${emailError}"></p>
-            <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('email')}"
-               th:errors="*{email}"></p>
+
         </div>
 
         <!-- パスワード -->
