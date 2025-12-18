@@ -7,11 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,7 +21,7 @@ public class UserController {
         model.addAttribute("user",new User());
         return "user/register";
     }
-/*
+
     @PostMapping("/register")
     public String registerUser(@Valid User user,
                                BindingResult bindingResult,
@@ -44,8 +40,7 @@ public class UserController {
         return "redirect:/users/register/success";
     }
 
- */
-
+    /*
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user) {
         System.out.println("【DEBUG】UserController の POST /users/register が呼ばれました！");
@@ -55,7 +50,28 @@ public class UserController {
 
         return "redirect:/users/register/success";
     }
+*/
+    @GetMapping("/login")
+    public String showLoginForm(Model model){
+        return "user/login";
+    }
 
+    @PostMapping("/login")
+    public String loginUser(@RequestParam String email,@RequestParam String password, Model model) {
+
+        //emailとpasswordの値がtrueならホーム画面に戻る
+        if (userService.login(email, password)) {
+            return "redirect:/";
+        }
+
+        //エラーフラグが立っていたらログイン画面に戻しエラーメッセージを表示する
+        model.addAttribute("loginError", "ログインに失敗しました");
+
+        //redirectしたらmodel(loginError)が消えてしまう為redirectしない
+        return "user/login";
+    }
+
+//登録成功画面を表示する
     @GetMapping("/register/success")
     public String registerSuccess() {
         return "user/success";

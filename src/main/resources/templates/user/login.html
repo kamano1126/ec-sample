@@ -2,54 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>ユーザー登録</title>
+    <title>ユーザーログイン</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
 
 <div class="max-w-md mx-auto mt-20 p-8 bg-white shadow-lg rounded">
-    <h1 class="text-2xl font-bold mb-6 text-center">ユーザー登録</h1>
+    <h1 class="text-2xl font-bold mb-6 text-center">ログイン</h1>
 
-<!-- TODO　エラー表示の内容をログイン用に変換する。loginForm.javaを作ってコントローラー側でエラーの値を渡す。その値をth:errorsで受け取ってエラー表示を出す -->
+    <p th:if="${loginError}" class="text-red-500 text-sm"  th:text="${loginError}"></p>
 
-    <p class="text-red-500 text-sm" th:if="${hasErrors('email','password','username')}"
-       th:errors=""></p>
-
-    <form th:action="@{/users/register}" th:object="${user}" method="post" class="space-y-4">
+    <form th:action="@{/users/login}" method="post" class="space-y-4">
 
 
-        <!-- ユーザー名-->
-        <div>
-            <label class="block mb-1">ユーザー名</label>
-            <input type="text" th:field="*{username}"
-                   class="w-full p-2 border rounded">
-            <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('username')}"
-               th:errors="*{username}"></p>
-        </div>
 
         <!-- メールアドレス -->
         <div>
             <label class="block mb-1">メールアドレス</label>
-            <input type="email" th:field="*{email}"
+            <input type="email" name="email"
                    class="w-full p-2 border rounded">
-            <p class="text-red-500 text-sm" th:if="${emailError}"
-               th:text="${emailError}"></p>
 
         </div>
 
         <!-- パスワード -->
         <div>
             <label class="block mb-1">パスワード</label>
-            <input type="password" th:field="*{password}"
+            <input type="password" name="password"
                    class="w-full p-2 border rounded">
-            <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('password')}"
-               th:errors="*{password}"></p>
         </div>
 
         <!-- 登録ボタン -->
         <button type="submit"
                 class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-            登録
+            ログイン
         </button>
     </form>
 </div>
