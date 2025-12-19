@@ -1,5 +1,5 @@
-INSERT INTO product (id,name,price,description,stock,size,category,period,bland)
-VALUES (1, 'ジャケット', 15000, 'Made in USA',1,'XL','jacket','70s','levis');
+INSERT INTO product (id,name,image_path,price,description,stock,size,category,period,brand)
+VALUES (1, 'ジャケット','images/8751f5b4-52bb-4cd7-8bc6-25fa27d80396_product.id-1.jpg', 15000, 'Made in USA',1,'XL','jacket','70s','levis');
 
 INSERT INTO product (id, name, price, description,stock,size,category,period,bland)
 VALUES (2, 'US.ARMY M-47', 20000, 'アメリカ軍で実際に使用されていたベイカーパンツ',1,'32','pants','40s','US.ARMY');
@@ -16,3 +16,8 @@ VALUES (5, 'スエードジャケット', 37000, 'ポロカンのスエードジ
 INSERT INTO product (id, name, price, description,stock,size,category,period,bland)
 VALUES (6, 'ダブルニーダックパンツ', 22000, '70s　カーハートのダブルニー',1,'38','pants','70s','carhart');
 
+INSERT INTO product (id, name, price, description,stock,size,category,period,bland)
+VALUES (7, 'フリース', 15000, 'mont-bellのフリース',1,'L','light outer','regular','montbell');
+
+INSERT INTO product (id, name, price, description,stock,size,category,period,bland)
+VALUES (8, '70s FFAジャケット', 32000, '70s　FFAジャケット　テネシー',1,'42','light outer','70s','FFA');

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,10 +27,26 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public String showProductDetail(@PathVariable Long id,Model model){
+    public String showProductDetail(@PathVariable("id") Long id,Model model){
         Product product = productService.findByID(id);
         model.addAttribute("product",product);
         return "products/detail";
     }
+
+    @GetMapping("/upload")
+    public String showUploadForm() {
+        return "products/upload";
+    }
+
+    @PostMapping("/upload")
+    public String uploadProduct(
+            @RequestParam("productId") Long productId,
+            @RequestParam("file") MultipartFile file) throws Exception {
+
+        productService.attachImageToProduct(productId, file);
+        //System.out.println("ファイル" + file);
+        return "redirect:/products/" + productId;
+    }
+
 
 }
