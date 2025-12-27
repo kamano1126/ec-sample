@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品登録（管理者）</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+<!-- 共通ヘッダー -->
+<div th:replace="layout/header :: siteHeader"></div>
+
+<div class="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-lg shadow">
+
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">
+        管理者用 商品登録
+    </h1>
+
+    <!-- 商品登録フォーム -->
+    <form th:action="@{/admin/products}"
+          th:object="${product}"
+          method="post"
+          enctype="multipart/form-data"
+          class="space-y-6">
+
+        <!-- 商品名 -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                商品名
+            </label>
+            <input type="text"
+                   th:field="*{name}"
+                   class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200">
+        </div>
+
+        <!-- 説明 -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                商品説明
+            </label>
+            <textarea th:field="*{description}"
+                      rows="4"
+                      class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200"></textarea>
+        </div>
+
+        <!-- 価格 -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                価格（円）
+            </label>
+            <input type="number"
+                   th:field="*{price}"
+                   class="w-full border rounded px-3 py-2">
+        </div>
+
+        <!-- 在庫数 -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                在庫数
+            </label>
+            <input type="number"
+                   th:field="*{stock}"
+                   class="w-full border rounded px-3 py-2">
+        </div>
+
+        <!-- カテゴリ -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                カテゴリ
+            </label>
+            <select th:field="*{category}"
+                    class="w-full border rounded px-3 py-2">
+                <option value="">選択してください</option>
+                <option value="jacket">ジャケット</option>
+                <option value="shirt">シャツ</option>
+                <option value="pants">パンツ</option>
+                <option value="others">その他</option>
+            </select>
+        </div>
+
+        <!-- ブランド -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                ブランド
+            </label>
+            <input type="text"
+                   th:field="*{brand}"
+                   class="w-full border rounded px-3 py-2">
+        </div>
+
+        <!-- サイズ -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                サイズ
+            </label>
+            <select th:field="*{size}"
+                    class="w-full border rounded px-3 py-2">
+                <option value="">選択</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+            </select>
+        </div>
+
+        <!-- 年代 -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                年代
+            </label>
+            <input type="text"
+                   th:field="*{period}"
+                   placeholder="例：70s"
+                   class="w-full border rounded px-3 py-2">
+        </div>
+
+        <!-- 商品画像 -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                商品画像
+            </label>
+            <input type="file"
+                   name="image"
+                   class="w-full border rounded px-3 py-2 bg-white">
+        </div>
+
+        <!-- ボタン -->
+        <div class="flex justify-end gap-4 pt-4">
+            <a href="/"
+               class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100">
+                キャンセル
+            </a>
+
+            <button type="submit"
+                    class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                登録する
+            </button>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>

@@ -4,7 +4,7 @@ public enum Category {
     JACKET("jakect"),
     PANTS("pants"),
     SHIRT("shirt"),
-    Tshirt("T-shirt"),
+    TSHIRT("T-shirt"),
     LIGHTOUTER("light-outer");
 
     private final String label;

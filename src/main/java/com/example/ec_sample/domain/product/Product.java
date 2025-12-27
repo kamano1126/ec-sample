@@ -21,8 +21,6 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//＠NotBlank、＠NotNullを使えるようにする
-//メッセージ”商品名は必須です”等を表示させる
     @Column(nullable = false)
     @NotBlank(message = "商品名は必須です")
     private String name;

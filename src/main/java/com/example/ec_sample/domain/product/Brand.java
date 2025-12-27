@@ -6,7 +6,7 @@ public enum Brand {
     LLBEAN("L.L.BEAN"),
     CARHART("carhart"),
     MONTBELL("mont-BELL"),
-    noBrand("ノーブランド"),
+    NOBRAND("ノーブランド"),
     FFA("FFA"),
     POLO("POLO COUNTRY");
 

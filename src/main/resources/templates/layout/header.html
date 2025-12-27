@@ -7,17 +7,29 @@
                         🏠ホーム
                     </a>
                     <a href="/products" class="text-gray-800 hover:text-blue-600 font-semibold text-lg transition-colors">
-                        商品一覧
+                        👘商品一覧
                     </a>
-                    <a href="/users/login" class="text-gray-800 hover:text-blue-600 font-semibold text-lg transition-colors">
-                        ログイン
+                    <a href="/cart" class="text-gray-800 hover:text-blue-600 font-semibold text-lg transition-colors">
+                        🛒カート
                     </a>
-                    <a href="/users/cart" class="text-gray-800 hover:text-blue-600 font-semibold text-lg transition-colors">
-                        カート
-                    </a>
-                    <a href="/users/register" class="text-gray-800 hover:text-blue-600 font-semibold text-lg transition-colors">
-                        ユーザー登録
-                    </a>
+                    <div th:if="${loginUser != null}">
+                        <p>ようこそ<span th:text="${loginUser.username}"></span>さん</p>
+                        <a href="/users/logout">ログアウト</a>
+                    </div>
+                    <div th:if="${loginUser == null}">
+                        <a href="/users/register" class="text-gray-800 hover:text-blue-600 font-semibold text-lg transition-colors">
+                            👤ユーザー登録
+                        </a>
+                        <a href="/users/login" class="text-gray-800 hover:text-blue-600 font-semibold text-lg transition-colors">
+                            ログイン
+                        </a>
+                    </div>
+                    <div th:if="${session.loginUser != null and session.loginUser.role == 'ROLE_ADMIN'}">
+                        <a href="/admin/products/new">
+                            商品登録
+                        </a>
+                    </div>
+
                 </div>
             </div>
         </div>
