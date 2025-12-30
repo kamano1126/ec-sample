@@ -22,6 +22,10 @@ public class ProductService {
     private final String uploadDir = "images/";  //プロジェクト外の安全な保存場所に画像を保存する
 
 
+    public Product save(Product product){
+        productRepository.save(product);
+        return product;
+    }
     public List<Product> findAll() {
         return productRepository.findAll();
     }

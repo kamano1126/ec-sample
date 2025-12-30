@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>商品管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+
+<div th:replace="layout/layout :: layout(~{::content})">
+    <div th:fragment="content">
+
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">商品管理</h1>
+
+                <a th:href="@{/admin/new}"
+                   class="bg-blue-600 text-white px-4 py-2 rounded
+                          hover:bg-blue-700 transition">
+                    ＋ 新規作成
+                </a>
+            </div>
+
+            <div class="overflow-x-auto bg-white shadow rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">ID</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">商品名</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">価格</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">在庫</th>
+                        <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">操作</th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-200">
+                    <tr th:each="product : ${products}">
+                        <td class="px-4 py-3 text-sm" th:text="${product.id}"></td>
+                        <td class="px-4 py-3 text-sm" th:text="${product.name}"></td>
+                        <td class="px-4 py-3 text-sm">
+                            <span th:text="${#numbers.formatDecimal(product.price,0,'COMMA',0,'POINT')}"></span> 円
+                        </td>
+                        <td class="px-4 py-3 text-sm" th:text="${product.stock}"></td>
+                        <td class="px-4 py-3 text-center space-x-2">
+                            <a th:href="@{/admin/{id}/edit(id=${product.id})}"
+                               class="text-blue-600 hover:underline">
+                                編集
+                            </a>
+                            <a th:href="@{/admin/{id}/delete(id=${product.id})}"
+                               class="text-red-600 hover:underline"
+                               onclick="return confirm('削除しますか？')">
+                                削除
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -37,7 +37,6 @@ public class ProductController {
             @RequestParam("file") MultipartFile file) throws Exception {
 
         productService.attachImageToProduct(productId, file);
-        //System.out.println("ファイル" + file);
         return "redirect:/products/" + productId;
     }
 

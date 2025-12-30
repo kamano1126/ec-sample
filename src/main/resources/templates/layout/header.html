@@ -33,7 +33,7 @@
                     <!-- 管理者 -->
                     <div th:if="${session.loginUser != null and session.loginUser.role.name() == 'ADMIN'}"
                          class="flex items-center gap-4">
-                        <a href="/admin/products/new"
+                        <a href="/admin/products"
                            class="rounded-md bg-red-50 px-3 py-1.5 text-sm font-semibold text-red-600
                       hover:bg-red-100 transition">
                             管理者メニュー

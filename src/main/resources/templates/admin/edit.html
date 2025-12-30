@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>商品編集</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield; /* Firefox */
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<div th:replace="layout/layout :: layout(~{::content})">
+    <div th:fragment="content">
+
+        <div class="container mx-auto px-4 py-8 max-w-2xl">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">商品編集</h1>
+
+            <form th:action="@{/admin/{id}/update(id=${product.id})}"
+                  method="post" enctype="multipart/form-data"
+                  class="bg-white shadow rounded-lg p-6 space-y-4">
+
+                <!-- 商品ID（非表示） -->
+                <input type="hidden" name="id" th:value="${product.id}"/>
+
+                <!-- 商品名 -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">商品名</label>
+                    <input type="text" name="name"
+                           th:value="${product.name}"
+                           class="w-full border rounded px-3 py-2" required>
+                </div>
+
+                <!-- 価格 -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">価格</label>
+                    <input type="number" name="price"
+                           th:value="${product.price}"
+                           class="w-full border rounded px-3 py-2" required>
+                </div>
+
+                <!-- 在庫 -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">在庫</label>
+                    <input type="number" name="stock"
+                           th:value="${product.stock}"
+                           class="w-full border rounded px-3 py-2" required>
+                </div>
+
+                <!-- サイズ -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">サイズ</label>
+                    <input type="text" name="size"
+                           th:value="${product.size}"
+                           class="w-full border rounded px-3 py-2">
+                </div>
+
+                <!-- カテゴリ（Enum） -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">カテゴリ</label>
+                    <select name="category" class="w-full border rounded px-3 py-2">
+                        <option th:each="c : ${T(com.example.ec_sample.domain.product.Category).values()}"
+                                th:value="${c}" th:text="${c}"
+                                th:selected="${c == product.category}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- ブランド（Enum） -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">ブランド</label>
+                    <select name="brand" class="w-full border rounded px-3 py-2">
+                        <option th:each="b : ${T(com.example.ec_sample.domain.product.Brand).values()}"
+                                th:value="${b}" th:text="${b}"
+                                th:selected="${b == product.brand}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- 年代（Enum） -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">年代</label>
+                    <select name="period" class="w-full border rounded px-3 py-2">
+                        <option th:each="p : ${T(com.example.ec_sample.domain.product.Period).values()}"
+                                th:value="${p}" th:text="${p}"
+                                th:selected="${p == product.period}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- 登録日 -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">登録日</label>
+                    <input type="date" name="joinDate"
+                           th:value="${product.joinDate != null} ? ${#temporals.format(product.joinDate,'yyyy-MM-dd')} : ''"
+                           class="w-full border rounded px-3 py-2">
+
+                </div>
+
+                <!-- 説明 -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">説明</label>
+                    <textarea name="description" rows="4"
+                              class="w-full border rounded px-3 py-2"
+                              th:text="${product.description}"></textarea>
+                </div>
+
+                <!-- 画像 -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">画像</label>
+                    <div class="mb-2">
+                        <img th:if="${product.imagePath != null}"
+                             th:src="@{${product.imagePath}}"
+                             alt="商品画像"
+                             class="w-32 h-32 object-cover rounded">
+                    </div>
+                    <input type="file" name="image"
+                           class="w-full border rounded px-3 py-2" accept="image/*">
+                </div>
+
+                <!-- ボタン -->
+                <div class="flex justify-end space-x-2">
+                    <a th:href="@{/admin/products}"
+                       class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                        戻る
+                    </a>
+                    <button type="submit"
+                            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        更新
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
