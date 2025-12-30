@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
 
@@ -17,11 +18,13 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/order/confirm")
-    public String confirmOrder(HttpSession session){
+    public String confirmOrder(HttpSession session,
+                               RedirectAttributes redirectAttributes){
 
         Map<Long,Integer> cart = (Map<Long, Integer>) session.getAttribute("cart");
 
         if (cart == null || cart.isEmpty()){
+            redirectAttributes.addFlashAttribute("toast","cartNull");
             return "redirect:/cart";
         }
         

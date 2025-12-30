@@ -28,9 +28,11 @@ public class User {
     @NotBlank(message = "パスワードは必須です")
     private String password;
 
-    private Boolean isAdmin;
+    @Column(nullable = false)
+    private Boolean isAdmin = false;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(nullable = false)
+    private Role role = Role.USER;
 
 }

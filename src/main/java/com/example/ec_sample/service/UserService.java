@@ -1,5 +1,6 @@
 package com.example.ec_sample.service;
 
+import com.example.ec_sample.domain.user.Role;
 import com.example.ec_sample.domain.user.User;
 import com.example.ec_sample.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ public class UserService {
         //パスワードをハッシュ化する
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        user.setRole(Role.USER);     // ← これ！！
+        user.setIsAdmin(false);
         return userRepository.save(user);
     }
 

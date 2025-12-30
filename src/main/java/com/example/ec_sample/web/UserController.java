@@ -1,6 +1,7 @@
 package com.example.ec_sample.web;
 
 import com.example.ec_sample.domain.user.User;
+import com.example.ec_sample.domain.user.UserRepository;
 import com.example.ec_sample.service.ProductService;
 import com.example.ec_sample.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,6 +22,7 @@ public class UserController {
 
     private final UserService userService;
     private final ProductService productService;
+    private final UserRepository userRepository;
 
     @GetMapping("/register")
     public String showRegisterForm(Model model){
@@ -39,7 +44,6 @@ public class UserController {
             model.addAttribute("emailError",e.getMessage());
             return "user/register";
         }
-        System.out.println("POST /register を通過");
         return "redirect:/users/register/success";
     }
 
@@ -52,14 +56,17 @@ public class UserController {
     public String loginUser(@RequestParam String email,
                             @RequestParam String password,
                             HttpSession session,
-                            Model model) {
+                            Model model,
+                            RedirectAttributes redirectAttributes) {
 
         User loginUser = userService.login(email,password);
 
         //emailとpasswordの値がtrueならホーム画面に戻る
         if (loginUser != null) {
-            session.setAttribute("loginUser",loginUser.getId());
-            return "redirect:/?toast=login";
+            User freshUser = userRepository.findById(loginUser.getId()).get();
+            session.setAttribute("loginUser", freshUser);
+            redirectAttributes.addFlashAttribute("toast", "login");
+            return "redirect:/";
         }
 
         //エラーフラグが立っていたらログイン画面に戻しエラーメッセージを表示する
@@ -70,8 +77,10 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session){
+    public String logout(HttpSession session,
+                         RedirectAttributes redirectAttributes){
         session.invalidate();//セッションを破棄する
+        redirectAttributes.addFlashAttribute("toast","logout");
         return "redirect:/";
     }
 

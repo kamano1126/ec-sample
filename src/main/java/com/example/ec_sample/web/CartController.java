@@ -80,12 +80,14 @@ public class CartController {
     @PostMapping("/cart/add")
     public String addToCart(@RequestParam Long productId,
                             @RequestParam Integer addQuantity,
-                            HttpSession session){
+                            HttpSession session,
+                            RedirectAttributes redirectAttributes){
 
         Product product =productService.findByID(productId);
 
         if (product == null){
-            return "redirect:/products?toast=error";
+            redirectAttributes.addFlashAttribute("toast","error");
+            return "redirect:/products";
         }
 
         Map<Long,Integer> cart = (Map<Long, Integer>) session.getAttribute("cart");
@@ -99,7 +101,8 @@ public class CartController {
         int totalQuantity = cartService.addItem(currentQuantity,addQuantity);
 
         if (product.getStock() < totalQuantity){
-            return "redirect:/products?toast=warning";
+            redirectAttributes.addFlashAttribute("toast","warning");
+            return "redirect:/products";
         }
 
         if(totalQuantity <= 0){
@@ -109,8 +112,8 @@ public class CartController {
         }
 
         session.setAttribute("cart",cart);
-
-        return "redirect:/products?toast=added";
+        redirectAttributes.addFlashAttribute("toast","added");
+        return "redirect:/products";
 
     }
 

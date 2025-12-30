@@ -26,13 +26,6 @@ public class ProductController {
         return "products/list";  // templates/products/list.html を表示
     }
 
-    @GetMapping("/products/{id}")
-    public String showProductDetail(@PathVariable("id") Long id,Model model){
-        Product product = productService.findByID(id);
-        model.addAttribute("product",product);
-        return "products/detail";
-    }
-
     @GetMapping("/upload")
     public String showUploadForm() {
         return "products/upload";

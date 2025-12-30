@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org " xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>EC Sample</title>
@@ -7,8 +7,8 @@
 </head>
 
 <body class="bg-gray-100 text-gray-800">
-<div th:replace="layout/header :: siteHeader"></div>
-
+<div th:replace="layout/layout :: layout(~{::content})">
+    <div th:fragment="content">
 <!-- ================= メイン ================= -->
 <main class="max-w-7xl mx-auto px-6 py-10">
 
@@ -28,7 +28,7 @@
                 <div class="w-full h-64 bg-gray-300 flex items-center justify-center">
                     <img th:src="${product.imagePath}"
                          alt="商品画像"
-                         class="w-full h-40 object-cover rounded-lg mb-3"/>
+                         class="w-full h-full object-cover rounded-lg mb-3"/>
                 </div>
 
                 <!-- 商品情報 -->
@@ -67,13 +67,7 @@
         </div>
     </div>
 </main>
-
-<!-- ================= フッター ================= -->
-<footer class="bg-gray-800 text-white mt-12">
-    <div class="max-w-7xl mx-auto px-6 py-6 text-center">
-        <p class="text-sm">© 2025 EC SAMPLE</p>
-    </div>
-</footer>
-
+</div>
+</div>
 </body>
 </html>
