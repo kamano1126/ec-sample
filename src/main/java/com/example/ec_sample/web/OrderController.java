@@ -1,7 +1,9 @@
 package com.example.ec_sample.web;
 
+import com.example.ec_sample.domain.product.Product;
 import com.example.ec_sample.domain.user.User;
 import com.example.ec_sample.service.OrderService;
+import com.example.ec_sample.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import java.util.Map;
 public class OrderController {
 
     private final OrderService orderService;
+    private final ProductService productService;
 
     @PostMapping("/order/confirm")
     public String confirmOrder(HttpSession session,
@@ -27,13 +30,17 @@ public class OrderController {
             redirectAttributes.addFlashAttribute("toast","cartNull");
             return "redirect:/cart";
         }
-        
+
         User user = (User) session.getAttribute("loginUser");
 
-        orderService.createOrder(user,cart);
+        try{
+            orderService.createOrder(user,cart);
+        }catch (IllegalStateException e){
+            redirectAttributes.addFlashAttribute("toast","warning");
+            return "redirect:/cart";
+        }
 
         session.removeAttribute("cart");
-
         return "redirect:/order/complete";
     }
 

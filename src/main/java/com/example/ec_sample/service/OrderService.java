@@ -7,8 +7,8 @@ import com.example.ec_sample.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -16,9 +16,8 @@ import java.util.Map;
 @Transactional
 public class OrderService {
 
-    private final OrderRepository orderPepository;
-    private final OrderItemRepository orderItemPepository;
-    private final ProductRepository productPepository;
+    private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
 
     public Order createOrder(User user, Map<Long, Integer> cart) {
 
@@ -32,10 +31,11 @@ public class OrderService {
         for (Map.Entry<Long, Integer> entry : cart.entrySet()) {
 
             Long productId = entry.getKey();
-            Integer quantity = entry.getValue();
 
-            Product product = productPepository.findById(productId)
+            Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new IllegalArgumentException("商品が存在しません"));
+
+            Integer quantity = entry.getValue();
 
             if (product.getStock() < quantity) {
                 throw new IllegalStateException("在庫不足です");
@@ -47,7 +47,7 @@ public class OrderService {
             item.setPrice(product.getPrice());
             item.setQuantity(quantity);
 
-            order.getOrderItems().add(item); // ← ここが超重要
+            order.getOrderItems().add(item);
 
             totalAmount += product.getPrice() * quantity;
             product.setStock(product.getStock() - quantity);
@@ -55,7 +55,11 @@ public class OrderService {
 
         order.setTotalAmount(totalAmount);
 
-        // 🔥 Order を1回保存するだけ
-        return orderPepository.save(order);
+        return orderRepository.save(order);
     }
+
+    public List<Order> getAllOrders(){
+        return orderRepository.findAll();
+    }
+
 }

@@ -5,9 +5,30 @@
 
                 <!-- 左：メインナビ -->
                 <div class="flex items-center gap-8">
-                    <a href="/" class="nav-item hover:text-blue-600">🏠 ホーム</a>
-                    <a href="/products" class="nav-item hover:text-blue-600">👘 商品一覧</a>
-                    <a href="/cart" class="nav-item hover:text-blue-600">🛒 カート</a>
+
+                    <!-- 未ログイン -->
+                    <div th:if="${session.loginUser == null}" class ="flex items-center gap-4">
+                        <a href="/" class="nav-item hover:text-blue-600">🏠 ホーム</a>
+                        <a href="/products" class="nav-item hover:text-blue-600">👘 商品一覧</a>
+                        <a href="/cart" class="nav-item hover:text-blue-600">🛒 カート</a>
+                    </div>
+
+                    <!-- 一般ユーザー -->
+                    <div th:if="${session.loginUser != null and session.loginUser.role.name() == 'USER'}"
+                         class = "flex items-center gap-4">
+                        <a href="/" class="nav-item hover:text-blue-600">🏠 ホーム1</a>
+                        <a href="/products" class="nav-item hover:text-blue-600">👘 商品一覧</a>
+                        <a href="/cart" class="nav-item hover:text-blue-600">🛒 カート</a>
+                    </div>
+
+                    <!-- 管理者 -->
+                    <div th:if="${session.loginUser != null and session.loginUser.role.name() == 'ADMIN'}"
+                         class = "flex items-center gap-4">
+                        <a href="/" class="nav-item hover:text-blue-600">🏠 ホーム2</a>
+                        <a href="/products" class="nav-item hover:text-blue-600">👘 商品一覧</a>
+                        <a href="/cart" class="nav-item hover:text-blue-600">🛒 カート</a>
+                        <a href="/admin/order/list" class="nav-item hover:text-blue-600">注文一覧</a>
+                    </div>
                 </div>
 
                 <!-- 右：ユーザー操作 -->
@@ -22,11 +43,11 @@
                     <!-- 一般ユーザー -->
                     <div th:if="${session.loginUser != null and session.loginUser.role.name() == 'USER'}"
                          class="flex items-center gap-4">
-            <span class="text-sm text-gray-700">
-              ようこそ
-              <span class="font-semibold" th:text="${session.loginUser.username}"></span>
-              さん
-            </span>
+                        <span class="text-sm text-gray-700">
+                            ようこそ
+                            <span class="font-semibold" th:text="${session.loginUser.username}"></span>
+                            さん
+                        </span>
                         <a href="/users/logout" class="nav-item">ログアウト</a>
                     </div>
 
@@ -35,7 +56,7 @@
                          class="flex items-center gap-4">
                         <a href="/admin/products"
                            class="rounded-md bg-red-50 px-3 py-1.5 text-sm font-semibold text-red-600
-                      hover:bg-red-100 transition">
+                           hover:bg-red-100 transition">
                             管理者メニュー
                         </a>
                         <a href="/users/logout" class="nav-item hover:text-blue-600">ログアウト</a>

@@ -49,14 +49,20 @@
                     <form th:action="@{/cart/change}" method="post" class="inline">
                         <input type="hidden" name="productId" th:value="${item.id}">
                         <input type="hidden" name="changeQuantity" value="1">
-                        <button class="px-2 py-1 bg-gray-400 hover:bg-gray-700 text-white rounded">＋</button>
+                        <button class="px-2 py-1 bg-gray-400
+                        hover:bg-gray-700 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                        th:disabled="${item.quantity >= item.stock}">
+                            ＋
+                        </button>
                     </form>
 
                     <!-- 数量 -1 -->
                     <form th:action="@{/cart/change}" method="post" class="inline">
                         <input type="hidden" name="productId" th:value="${item.id}">
                         <input type="hidden" name="changeQuantity" value="-1">
-                        <button class="px-2 py-1 bg-gray-400 hover:bg-gray-700 text-white rounded">−</button>
+                        <button class="px-2 py-1 bg-gray-400 hover:bg-gray-700 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                        th:disabled="${item.quantity <= 1}">
+                            −</button>
                     </form>
 
                     <!-- 削除 -->

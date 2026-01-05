@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>注文一覧</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<div class="max-w-6xl mx-auto mt-10 bg-white shadow rounded-lg p-6">
+
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">
+        注文一覧（管理者）
+    </h1>
+
+    <table class="w-full border-collapse">
+        <thead class="bg-gray-50 text-gray-700 text-sm">
+        <tr>
+            <th class="border px-4 py-2 text-left">注文ID</th>
+            <th class="border px-4 py-2 text-left">購入者</th>
+            <th class="border px-4 py-2 text-right">合計金額</th>
+            <th class="border px-4 py-2 text-left">注文日時</th>
+            <th class="border px-4 py-2 text-left">ステータス</th>
+            <th class="border px-4 py-2 text-center">詳細</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="order : ${orders}"
+            class="hover:bg-gray-50 transition">
+            <td class="border px-4 py-2" th:text="${order.id}"></td>
+            <td class="border px-4 py-2" th:text="${order.user != null ? order.user.username : '---'}"></td>
+            <td class="border px-4 py-2 text-right"
+                th:text="${order.totalAmount} + '円'"></td>
+            <td class="border px-4 py-2"
+                th:text="${#temporals.format(order.createdAt, 'yyyy/MM/dd HH:mm')}"></td>
+
+            <td class="border px-4 py-2 text-center">
+                <a th:href="@{/admin/order/{id}(id=${order.id})}"
+                   class="text-blue-600 hover:underline text-sm">
+                    詳細
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

@@ -58,6 +58,7 @@ public class CartController {
             item.put("name",product.getName());
             item.put("price",product.getPrice());
             item.put("quantity",quantity);
+            item.put("stock",product.getStock());
             item.put("subtotal",product.getPrice()*quantity);
 
             cartItems.add(item);
@@ -120,7 +121,8 @@ public class CartController {
     @PostMapping("/cart/change")
     public String changeCartItem(@RequestParam Long productId,
                                  @RequestParam Integer changeQuantity,
-                                 HttpSession session){
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes){
 
         Map<Long,Integer> cart = (Map<Long, Integer>) session.getAttribute("cart");
 
@@ -128,9 +130,15 @@ public class CartController {
             return "redirect:/cart";
         }
 
-        int currentQuantity = cart.get(productId);
+        Product product = productService.findByID(productId);
 
+        int currentQuantity = cart.get(productId);
         int totalQuantity = cartService.changeItem(currentQuantity,changeQuantity);
+
+        if (totalQuantity > product.getStock()){
+            redirectAttributes.addFlashAttribute("toast","warning");
+            return "redirect:/cart";
+        }
 
         if (totalQuantity <= 0){
             cart.remove(productId);
@@ -139,7 +147,6 @@ public class CartController {
         }
 
         session.setAttribute("cart",cart);
-
         return "redirect:/cart";
     }
 }
