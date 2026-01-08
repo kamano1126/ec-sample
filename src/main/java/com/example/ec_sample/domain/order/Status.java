@@ -1,7 +1,7 @@
 package com.example.ec_sample.domain.order;
 
 public enum Status {
-    CREATED("注文作成"),
+    CREATED("支払い未完"),
     PAID("支払い済"),
     SHIPPED("発送済み"),
     CANCELLED("キャンセル");

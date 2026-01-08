@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>注文詳細</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50">
+
+<div class="max-w-4xl mx-auto py-10 px-4">
+
+    <!-- 戻る -->
+    <div class="mb-4">
+        <a href="/orders" class="text-sm text-blue-600 hover:underline">
+            ← 注文履歴に戻る
+        </a>
+    </div>
+
+    <!-- タイトル -->
+    <h1 class="text-2xl font-bold mb-6">注文詳細</h1>
+
+    <!-- 注文情報 -->
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <p class="text-sm text-gray-500">
+                    注文番号：
+                    <span class="font-medium" th:text="${order.id}"></span>
+                </p>
+                <p class="text-sm text-gray-500">
+                    注文日時：
+                    <span th:text="${#temporals.format(order.createdAt, 'yyyy/MM/dd HH:mm')}"></span>
+                </p>
+            </div>
+
+            <!-- ステータス -->
+            <span class="px-3 py-1 rounded text-sm font-semibold"
+                  th:text="${order.status.label}"
+                  th:classappend="
+                    ${order.status.name() == 'CREATED'} ? ' bg-gray-200 text-gray-700' :
+                    (${order.status.name() == 'PAID'} ? ' bg-yellow-100 text-yellow-700' :
+                    (${order.status.name() == 'SHIPPED'} ? ' bg-green-100 text-green-700' :
+                    ' bg-red-100 text-red-700'))
+                  ">
+            </span>
+        </div>
+    </div>
+
+    <!-- 注文明細 -->
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <h2 class="text-lg font-semibold mb-4">注文明細</h2>
+
+        <table class="w-full border-collapse text-sm">
+            <thead>
+            <tr class="bg-gray-100">
+                <th class="border p-2 text-left">商品名</th>
+                <th class="border p-2 text-right">単価</th>
+                <th class="border p-2 text-center">数量</th>
+                <th class="border p-2 text-right">小計</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="item : ${order.orderItems}">
+                <td class="border p-2" th:text="${item.product.name}"></td>
+                <td class="border p-2 text-right">
+                    <span th:text="${item.price}"></span> 円
+                </td>
+                <td class="border p-2 text-center" th:text="${item.quantity}"></td>
+                <td class="border p-2 text-right font-semibold">
+                    <span th:text="${item.price * item.quantity}"></span> 円
+                </td>
+            </tr>
+            </tbody>
+
+            <tfoot>
+            <tr class="bg-gray-50">
+                <td colspan="3" class="border p-2 text-right font-semibold">
+                    合計金額
+                </td>
+                <td class="border p-2 text-right text-lg font-bold">
+                    <span th:text="${order.totalAmount}"></span> 円
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- 操作エリア -->
+    <div class="bg-white rounded-lg shadow p-6 flex justify-between items-center">
+
+        <!-- キャンセル不可表示 -->
+        <p th:if="${order.status.name() == 'SHIPPED'}"
+           class="text-green-600 font-semibold">
+            この注文は発送済みです
+        </p>
+
+        <p th:if="${order.status.name() == 'CANCELLED'}"
+           class="text-gray-500 font-semibold">
+            この注文はキャンセル済みです
+        </p>
+
+        <!-- キャンセルボタン -->
+        <form th:if="${order.status.name() == 'CREATED' || order.status.name() == 'PAID'}"
+              th:action="@{/order/{id}/cancel(id=${order.id})}"
+              method="post"
+              class="ml-auto"
+              onsubmit="return confirm('この注文をキャンセルしますか？');">
+
+            <button class="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600">
+                注文をキャンセルする
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

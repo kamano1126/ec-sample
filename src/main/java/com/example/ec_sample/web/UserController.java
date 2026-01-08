@@ -33,13 +33,21 @@ public class UserController {
     @PostMapping("/register")
     public String registerUser(@Valid User user,
                                BindingResult bindingResult,
-                               Model model){
+                               Model model,
+                               HttpSession session){
         if(bindingResult.hasErrors()){
             return "user/register";
         }
 
         try{
             userService.register(user);
+
+            Boolean checkout = (Boolean) session.getAttribute("checkoutInProgress");
+
+            if(Boolean.TRUE.equals(checkout)){
+                session.removeAttribute("checkoutInProgress");
+                return "redirect:/users/register/success";
+            }
         }catch (IllegalArgumentException e){
             model.addAttribute("emailError",e.getMessage());
             return "user/register";
@@ -65,6 +73,14 @@ public class UserController {
         if (loginUser != null) {
             User freshUser = userRepository.findById(loginUser.getId()).get();
             session.setAttribute("loginUser", freshUser);
+
+            Boolean checkout = (Boolean) session.getAttribute("checkoutInProgress");
+
+            if (Boolean.TRUE.equals(checkout)){
+                session.removeAttribute("checkoutInProgress");
+                return "forward:/order/confirm/submit";
+            }
+
             redirectAttributes.addFlashAttribute("toast", "login");
             return "redirect:/";
         }
@@ -87,33 +103,6 @@ public class UserController {
     @GetMapping("/register/success")
     public String registerSuccess() {
         return "user/success";
-    }
-
-    @GetMapping("/admin/products/new")
-    public String showProductForm(HttpSession session) {
-
-        User loginUser = (User) session.getAttribute("loginUser");
-
-        if (loginUser == null || !"ROLE_ADMIN".equals(loginUser.getRole())) {
-            return "redirect:/?toast=error";
-        }
-
-        return "admin/product-form";
-    }
-
-
-    @PostMapping("/admin/products/{id}/delete")
-    public String deleteProduct(@PathVariable Long id,
-                                HttpSession session) {
-
-        User loginUser = (User) session.getAttribute("loginUser");
-
-        if (loginUser == null || !loginUser.getIsAdmin()) {
-            return "redirect:/?toast=warning";
-        }
-
-        productService.delete(id);
-        return "redirect:/products?toast=success";
     }
 
 }

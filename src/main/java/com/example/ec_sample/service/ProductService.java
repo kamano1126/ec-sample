@@ -4,6 +4,7 @@ import com.example.ec_sample.domain.product.Product;
 import com.example.ec_sample.domain.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -21,6 +22,19 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final String uploadDir = "images/";  //プロジェクト外の安全な保存場所に画像を保存する
 
+
+    @Transactional
+    public void decreaseStock(Long productId, int quantity){
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("商品が存在しません"));
+
+        if (product.getStock() < quantity){
+            throw new IllegalStateException("在庫不足です");
+        }
+
+        product.setStock(product.getStock() - quantity);
+    }
 
     public Product save(Product product){
         productRepository.save(product);
