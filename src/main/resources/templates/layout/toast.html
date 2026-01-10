@@ -9,7 +9,9 @@
          th:classappend="${toast == 'added'   ? 'bg-green-500' :
                           toast == 'login'   ? 'bg-blue-500' :
                           toast == 'logout'   ? 'bg-blue-500' :
-                          toast == 'cancel'   ? 'bg-blue-500' :
+                          toast == 'loginRequired'   ? 'bg-blue-500' :
+                          toast == 'delete'   ? 'bg-green-500' :
+                          toast == 'cancel'   ? 'bg-yellow-500' :
                           toast == 'cartNull'   ? 'bg-yellow-400 text-black' :
                           toast == 'error'   ? 'bg-red-500' :
                           toast == 'warning' ? 'bg-yellow-400 text-black' :
@@ -26,6 +28,8 @@
             <span th:if="${toast} == 'added'">✅</span>
             <span th:if="${toast} == 'login'">🔐</span>
             <span th:if="${toast} == 'logout'">🔐</span>
+            <span th:if="${toast} == 'loginRequired'">🔐</span>
+            <span th:if="${toast} == 'delete'">🚮</span>
             <span th:if="${toast} == 'cancel'">❌</span>
             <span th:if="${toast} == 'cartNull'">⚠️</span>
             <span th:if="${toast} == 'error'">❌</span>
@@ -36,6 +40,8 @@
         <span th:text="${toast == 'added'   ? 'カートに追加しました' :
                         toast == 'login'   ? 'ログインしました' :
                         toast == 'logout'   ? 'ログアウトしました' :
+                        toast == 'loginRequired'   ? 'ログイン/アカウント登録が必要です' :
+                        toast == 'delete'   ? '削除されました' :
                         toast == 'cancel'   ? 'キャンセルしました' :
                         toast == 'cartNull'   ? 'カートに商品が追加されていません' :
                         toast == 'error'   ? 'エラーが発生しました' :

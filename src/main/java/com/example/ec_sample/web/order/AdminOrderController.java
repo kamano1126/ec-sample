@@ -1,9 +1,11 @@
-package com.example.ec_sample.web.admin;
+package com.example.ec_sample.web.order;
 
 
 import com.example.ec_sample.domain.order.Order;
+import com.example.ec_sample.domain.order.Status;
 import com.example.ec_sample.domain.user.User;
-import com.example.ec_sample.service.OrderService;
+import com.example.ec_sample.service.order.AdminOrderService;
+import com.example.ec_sample.service.order.OrderService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -19,19 +22,32 @@ import java.util.List;
 public class AdminOrderController {
 
     private final OrderService orderService;
+    private final AdminOrderService adminOrderService;
 
     @GetMapping("/admin/order/list")
     public String adminGetList(HttpSession session,
+                               @RequestParam(required = false) String sort,
+                               @RequestParam(required = false) Status status,
                                Model model){
+
         User loginUser = (User) session.getAttribute("loginUser");
 
         if (loginUser == null || !loginUser.getIsAdmin()){
             return "redirect:/";
         }
 
-        List<Order> orders = orderService.getAllOrders();
+        List<Order> orders = adminOrderService.getAllOrders();
+        if(orders == null || orders.isEmpty()){
+            model.addAttribute("isEmpty",true);
+            return "admin/order/list";
+        }
 
-        model.addAttribute("orders",orders);
+        model.addAttribute("orders",adminOrderService.searchOrder(sort,status));
+        model.addAttribute("sort",sort);
+        model.addAttribute("status",status);
+
+        model.addAttribute("statuses",Status.values());
+
         return "admin/order/list";
     }
 
@@ -63,7 +79,7 @@ public class AdminOrderController {
             return "redirect:/";
         }
 
-        orderService.cancelOrder(id);
+        adminOrderService.cancelOrder(id);
 
         return "redirect:/admin/order/" + id;
     }
@@ -78,7 +94,7 @@ public class AdminOrderController {
             return "redirect:/";
         }
 
-        orderService.markAsShipped(id);
+        adminOrderService.markAsShipped(id);
 
         return "redirect:/admin/order/" + id;
     }

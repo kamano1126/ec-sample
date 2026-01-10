@@ -1,9 +1,11 @@
-package com.example.ec_sample.web;
+package com.example.ec_sample.web.order;
 
 import com.example.ec_sample.domain.order.Order;
 import com.example.ec_sample.domain.user.User;
-import com.example.ec_sample.service.OrderService;
-import com.example.ec_sample.service.ProductService;
+import com.example.ec_sample.service.order.AdminOrderService;
+import com.example.ec_sample.service.order.OrderService;
+import com.example.ec_sample.service.order.UserOrderService;
+import com.example.ec_sample.service.product.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,32 +20,9 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
-public class OrderController {
+public class UserOrderController {
 
-    private final OrderService orderService;
-    private final ProductService productService;
-
-    @PostMapping("/checkout/start")
-    public String startCheckout(HttpSession session,
-                                RedirectAttributes redirectAttributes) {
-
-        User user = (User) session.getAttribute("loginUser");
-
-        if (user == null) {
-            // チェックアウト途中フラグ
-            session.setAttribute("checkoutInProgress", true);
-            redirectAttributes.addFlashAttribute("toast", "loginRequired");
-            return "redirect:/checkout/account";
-        }
-
-        return "forward:/order/confirm/submit";
-    }
-
-    @GetMapping("/order/confirm")
-    public String blockConfirmGet() {
-        return "redirect:/"; // or /cart
-    }
-
+    private final UserOrderService userOrderService;
 
     @PostMapping("/order/confirm/submit")
     public String confirmOrder(HttpSession session,
@@ -64,8 +43,8 @@ public class OrderController {
         }
 
         try{
-            Long orderId = orderService.createOrder(user,cart);
-            orderService.markAsPaid(orderId);
+            Long orderId = userOrderService.createOrder(user,cart);
+            userOrderService.markAsPaid(orderId);
         }catch (IllegalStateException e){
             redirectAttributes.addFlashAttribute("toast","warning");
             return "redirect:/cart";
@@ -83,7 +62,7 @@ public class OrderController {
             return "redirect:/login";
         }
 
-        List<Order> orders = orderService.findOrdersByUser(loginUser);
+        List<Order> orders = userOrderService.findOrdersByUser(loginUser);
 
         model.addAttribute("orders", orders);
         return "order/history";
@@ -99,7 +78,7 @@ public class OrderController {
             return "redirect:/login";
         }
 
-        Order order = orderService.findOrderForUser(id, loginUser);
+        Order order = userOrderService.findOrderForUser(id, loginUser);
 
         model.addAttribute("order", order);
         return "order/detail";
@@ -121,10 +100,9 @@ public class OrderController {
             return "redirect:/login";
         }
 
-        orderService.cancelOrderByUser(id, loginUser);
+        userOrderService.cancelOrderByUser(id, loginUser);
 
         redirectAttributes.addFlashAttribute("toast","cancel");
         return "redirect:/order/" + id;
     }
-
 }

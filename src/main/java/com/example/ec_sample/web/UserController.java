@@ -2,7 +2,7 @@ package com.example.ec_sample.web;
 
 import com.example.ec_sample.domain.user.User;
 import com.example.ec_sample.domain.user.UserRepository;
-import com.example.ec_sample.service.ProductService;
+import com.example.ec_sample.service.product.ProductService;
 import com.example.ec_sample.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -12,8 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ja">
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,62 +7,154 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
+
 <div th:replace="layout/layout :: layout(~{::content})">
     <div th:fragment="content">
-<div class="flex justify-end mb-4"></div>
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">新商品</h1>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <a th:each="product : ${products}"
-           th:href="@{/products/{id}(id=${product.id})}"
-           class="group block bg-white rounded-lg shadow-md
-           overflow-hidden hover:shadow-lg
-           transition-shadow relative">
-        <!-- 商品画像プレースホルダー -->
-            <div class="w-full h-64 bg-gray-300 overflow-hidden
-            flex items-center justify-center">
-                <img th:src="${product.imagePath}"
-                     alt="商品画像"
-                     class="w-full h-full object-cover
-                     group-hover:scale-105
-                     transition-transform duration-300"/>
-            </div>
-            
-            <!-- 商品情報 -->
-            <div class="p-4">
-                <!-- カテゴリ -->
-                <div class="text-xs font-semibold
-                 text-gray-600 uppercase mb-2"
-                     th:text="${product.category}"></div>
-                
-                <!-- 商品説明 -->
-                <div class="text-sm text-gray-900 mb-3 line-clamp-3"
-                     th:text="${product.description}"></div>
-                
-                <!-- 価格 -->
-                <div class="text-lg font-bold text-gray-900 mb-4">
-                    <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
-                    <span class="text-sm font-normal">円</span>
-                    <span class="text-sm font-normal text-gray-600">(税込)</span>
+
+        <div class="container mx-auto px-4 py-8">
+
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">商品一覧</h1>
+
+            <!-- ソート・絞り込みフォーム -->
+            <form method="get"
+                  th:action="@{/products}"
+                  class="flex flex-wrap items-end gap-4 mb-6">
+
+                <!-- ソート -->
+                <div>
+                    <select name="sort" class="border rounded px-3 py-2">
+                        <option value="" th:selected="${sort == null}">新着順</option>
+                        <option value="price_asc" th:selected="${sort == 'price_asc'}">価格: 安い順</option>
+                        <option value="price_desc" th:selected="${sort == 'price_desc'}">価格: 高い順</option>
+                        <option value="oldest" th:selected="${sort == 'oldest'}">古い順</option>
+                    </select>
                 </div>
 
-                <div th:if="${product.stock == null or product.stock == 0}">
-                    <button class="w-full bg-gray-400
-                     text-white font-medium py-2 px-4 rounded
-                      cursor-not-allowed" disabled>
-                        売り切れ
-                    </button>
+                <!-- 絞り込み -->
+                <div>
+                    <select name="category" class="border rounded px-3 py-2">
+                        <option value="">すべてのカテゴリ</option>
+                        <option th:each="c : ${categories}"
+                                th:value="${c}"
+                                th:selected="${c == category}"
+                                th:text="${c.label}">
+                        </option>
+                    </select>
                 </div>
+
+                <div>
+                    <select name="period" class="border rounded px-3 py-2">
+                        <option value="">すべての年代</option>
+                        <option th:each="p : ${periods}"
+                                th:value="${p}"
+                                th:selected="${p == period}"
+                                th:text="${p.label}">
+                        </option>
+                    </select>
+                </div>
+
+                <div>
+                    <select name="brand" class="border rounded px-3 py-2">
+                        <option value="">すべてのブランド</option>
+                        <option th:each="b : ${brands}"
+                                th:value="${b}"
+                                th:selected="${b == brand}"
+                                th:text="${b.label}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- 価格帯フィルタ -->
+                <div class="flex items-center gap-2">
+                    <input type="number"
+                           name="maxPrice"
+                           placeholder="最高価格"
+                           th:value="${maxPrice}"
+                           class="border rounded px-3 py-2 w-28">
+                    <span>〜</span>
+                    <input type="number"
+                           name="minPrice"
+                           placeholder="最低価格"
+                           th:value="${minPrice}"
+                           class="border rounded px-3 py-2 w-28">
+                </div>
+
+                <!-- 在庫ありのみ -->
+                <div class="flex items-center gap-2">
+                    <input type="checkbox"
+                           name="inStock"
+                           value="true"
+                           th:checked="${inStock}">
+                    <label class="text-sm text-gray-700">在庫ありのみ</label>
+                </div>
+
+                <button type="submit"
+                        class="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800">
+                    適用
+                </button>
+            </form>
+
+            <div th:if="${isEmpty}" class="py-16 text-center">
+
+                <p class="text-lg font-semibold mb-2">
+                    該当する商品がありません
+                </p>
+
+                <p class="text-gray-500 mb-6">
+                    入荷をお待ちください
+                </p>
+
+                <a th:href="@{/products}"
+                   class="inline-block px-6 py-3 bg-blue-600 rounded-lg　text-white hover:bg-blue-700 transition-colors">
+                    商品一覧を見る
+                </a>
             </div>
-            <div class="absolute inset-0 bg-black/10 opacity-0
-                        group-hover:opacity-100 transition
-                        pointe-events-none
-                        cursor-pointer">
+
+            <!-- 商品一覧 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <a th:each="product : ${products}"
+                   th:href="@{/products/{id}(id=${product.id})}"
+                   class="group block bg-white rounded-lg shadow-md
+                   overflow-hidden hover:shadow-lg
+                   transition-shadow relative">
+
+                    <!-- 商品画像 -->
+                    <div class="w-full h-64 bg-gray-300 flex items-center justify-center overflow-hidden">
+                        <img th:src="${product.imagePath}" alt="商品画像"
+                             class="w-full h-full object-cover
+                             group-hover:scale-105 transition-transform duration-300"/>
+                    </div>
+
+                    <!-- 商品情報 -->
+                    <div class="p-4">
+                        <!-- カテゴリ -->
+                        <div class="text-xs font-semibold text-gray-600 uppercase mb-2"
+                             th:text="${product.category}"></div>
+
+                        <!-- 商品説明 -->
+                        <div class="text-sm text-gray-900 mb-3 line-clamp-3"
+                             th:text="${product.description}"></div>
+
+                        <!-- 価格 -->
+                        <div class="text-lg font-bold text-gray-900 mb-4">
+                            <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                            <span class="text-sm font-normal">円</span>
+                            <span class="text-sm font-normal text-gray-600">(税込)</span>
+                        </div>
+
+                        <!-- 売り切れ -->
+                        <div th:if="${product.stock == null or product.stock == 0}">
+                            <button class="w-full bg-gray-400 text-white py-2 rounded cursor-not-allowed" disabled>
+                                売り切れ
+                            </button>
+                        </div>
+                    </div>
+                </a>
             </div>
-        </a>
+
+        </div>
     </div>
 </div>
-    </div>
-</div>
+
 </body>
 </html>

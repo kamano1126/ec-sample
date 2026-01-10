@@ -1,10 +1,10 @@
-package com.example.ec_sample.service;
-//コントローラから呼び出されて、商品データを取得します。
-import com.example.ec_sample.domain.product.Product;
-import com.example.ec_sample.domain.product.ProductRepository;
+package com.example.ec_sample.service.product;
+
+import com.example.ec_sample.domain.product.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,40 +15,46 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
+import static com.example.ec_sample.service.product.ProductSpecifications.*;
+import static com.example.ec_sample.service.product.ProductSpecifications.inStock;
+import static com.example.ec_sample.service.product.ProductSpecifications.priceGte;
+import static com.example.ec_sample.service.product.ProductSpecifications.priceLte;
+
 @Service
 @RequiredArgsConstructor
-public class ProductService {
+public class AdminProductService {
 
     private final ProductRepository productRepository;
     private final String uploadDir = "images/";  //プロジェクト外の安全な保存場所に画像を保存する
 
-
-    @Transactional
-    public void decreaseStock(Long productId, int quantity){
-
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("商品が存在しません"));
-
-        if (product.getStock() < quantity){
-            throw new IllegalStateException("在庫不足です");
+    public List<Product> searchProducts(String sort,
+                                        Category category,
+                                        Period period,
+                                        Brand brand){
+        //ソート
+        Sort sortOrder = Sort.by("id").descending();
+        if ("id_asc".equals(sort)){
+            sortOrder = Sort.by("id");
+        }else if ("date_asc".equals(sort)){
+            sortOrder = Sort.by("createdAt");
+        }else if ("date_desc".equals(sort)){
+            sortOrder = Sort.by("createdAt").descending();
         }
 
-        product.setStock(product.getStock() - quantity);
+        Specification<Product> spec = hasCategory(category)
+                .and(hasPeriod(period))
+                .and(hasBrand(brand));
+
+        return productRepository.findAll(spec,sortOrder);
     }
 
-    public Product save(Product product){
+    public Product save (Product product){
         productRepository.save(product);
         return product;
     }
-    public List<Product> findAll() {
-        return productRepository.findAll();
-    }
 
-    public Product findByID(Long id){
-        return productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("指定された商品が見つかりません: id=" +id));
-    }
 
-    public void attachImageToProduct(Long productId, MultipartFile file) throws IOException {
+    public void attachImageToProduct (Long productId, MultipartFile file) throws IOException {
 
         // 1. 既存商品を取得
         Product product = productRepository.findById(productId)
@@ -71,7 +77,7 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public void delete(Long id){
+    public void delete (Long id){
         productRepository.deleteById(id);
     }
 }

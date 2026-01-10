@@ -2,7 +2,7 @@ package com.example.ec_sample.web;
 
 
 import com.example.ec_sample.domain.product.Product;
-import com.example.ec_sample.service.ProductService;
+import com.example.ec_sample.service.product.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

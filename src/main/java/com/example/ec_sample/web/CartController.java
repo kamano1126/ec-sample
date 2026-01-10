@@ -1,9 +1,8 @@
 package com.example.ec_sample.web;
 
-import com.example.ec_sample.domain.cart.Cart;
 import com.example.ec_sample.domain.product.Product;
 import com.example.ec_sample.service.CartService;
-import com.example.ec_sample.service.ProductService;
+import com.example.ec_sample.service.product.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

@@ -14,6 +14,58 @@
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-bold text-gray-800">商品管理</h1>
 
+                <form method="get"
+                      th:action="@{/admin/products}"
+                      class="flex flex-wrap items-end gap-4 mb-6">
+
+                    <div>
+                        <select name="sort" class="border rounded px-3 py-2">
+                            <option value="" th:selected="${sort == null}">ID：昇順</option>
+                            <option value="id_asc" th:selected="${sort == 'id_asc'}">ID：降順</option>
+                            <option value="date_desc" th:selected="${sort == 'date_desc'}">追加順：昇順</option>
+                            <option value="date_asc" th:selected="${sort == 'date_asc'}">追加日：降順</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <select name="category" class="border rounded px-3 py-2">
+                            <option value="">すべてのカテゴリ</option>
+                            <option th:each="c : ${categories}"
+                                    th:value="${c}"
+                                    th:selected="${c == category}"
+                                    th:text="${c.label}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <select name="period" class="border rounded px-3 py-2">
+                            <option value="">すべての年代</option>
+                            <option th:each="p : ${periods}"
+                                    th:value="${p}"
+                                    th:selected="${p == period}"
+                                    th:text="${p.label}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <select name="brand" class="border rounded px-3 py-2">
+                            <option value="">すべてのブランド</option>
+                            <option th:each="b : ${brands}"
+                                    th:value="${b}"
+                                    th:selected="${b == brand}"
+                                    th:text="${b.label}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <button type="submit"
+                            class="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800">
+                        適用
+                    </button>
+                </form>
+
                 <a th:href="@{/admin/new}"
                    class="bg-blue-600 text-white px-4 py-2 rounded
                           hover:bg-blue-700 transition">
@@ -46,11 +98,16 @@
                                class="text-blue-600 hover:underline">
                                 編集
                             </a>
-                            <a th:href="@{/admin/{id}/delete(id=${product.id})}"
+                            <form th:action="@{/admin/products/{id}/delete(id=${product.id})}"
+                               method="post"
                                class="text-red-600 hover:underline"
                                onclick="return confirm('削除しますか？')">
-                                削除
-                            </a>
+                                <button type="submit"
+                                        class="text-red-600 hover:underline bg-transparent border-none p-0">
+                                    削除
+                                </button>
+
+                            </form>
                         </td>
                     </tr>
                     </tbody>

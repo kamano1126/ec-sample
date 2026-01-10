@@ -1,12 +1,17 @@
-package com.example.ec_sample.service;
+package com.example.ec_sample.service.order;
 
-import com.example.ec_sample.domain.order.*;
+import com.example.ec_sample.domain.order.Order;
+import com.example.ec_sample.domain.order.OrderItem;
+import com.example.ec_sample.domain.order.OrderRepository;
+import com.example.ec_sample.domain.order.Status;
 import com.example.ec_sample.domain.product.Product;
 import com.example.ec_sample.domain.product.ProductRepository;
 import com.example.ec_sample.domain.user.User;
+import com.example.ec_sample.service.product.ProductService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -14,11 +19,12 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class OrderService {
+public class UserOrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final ProductService productService;
+    private final OrderService orderService;
 
     public Long createOrder(User user, Map<Long, Integer> cart) {
 
@@ -60,7 +66,7 @@ public class OrderService {
     }
 
     public void markAsPaid(Long orderId){
-        Order order = findById(orderId);
+        Order order = orderService.findById(orderId);
 
         if (order.getStatus() != Status.CREATED){
             throw new IllegalStateException("支払い済みです");
@@ -73,23 +79,6 @@ public class OrderService {
                     item.getProduct().getId(),
                     item.getQuantity());
         }
-    }
-
-    public List<Order> getAllOrders(){
-        return orderRepository.findAll();
-    }
-
-
-
-
-    public Order findById(Long id){
-         return orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("注文が存在しません"));
-    }
-
-    public int calculateTotalAmount(Order order) {
-        return order.getOrderItems().stream()
-                .mapToInt(item -> item.getPrice() * item.getQuantity())
-                .sum();
     }
 
     public void cancelOrderByUser(Long orderId, User loginUser) {
@@ -131,34 +120,4 @@ public class OrderService {
 
         return order;
     }
-
-    public void cancelOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("注文が存在しません"));
-
-        // 発送済み・キャンセル済みは不可
-        if (order.getStatus() == Status.SHIPPED ||
-                order.getStatus() == Status.CANCELLED) {
-            throw new IllegalStateException("この注文はキャンセルできません");
-        }
-
-        for (OrderItem item : order.getOrderItems()) {
-            Product product = item.getProduct();
-            product.setStock(product.getStock() + item.getQuantity());
-        }
-
-        order.setStatus(Status.CANCELLED);
-    }
-
-    public void markAsShipped(Long orderId){
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("注文が存在しません"));
-
-        if(order.getStatus() != Status.PAID){
-            throw new IllegalStateException("発送できない状態です");
-        }
-
-        order.setStatus(Status.SHIPPED);
-    }
-
 }
