@@ -1,100 +1,135 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>カート</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
 
+<body class="bg-gray-100 text-gray-800">
 <div th:replace="layout/layout :: layout(~{::content})">
     <div th:fragment="content">
 
-<div class="max-w-4xl mx-auto mt-10 p-6 bg-white shadow rounded">
+        <main class="max-w-7xl mx-auto px-6 py-10">
 
-    <!-- タイトル -->
-    <h1 class="text-2xl font-bold mb-6 text-center">ショッピングカート</h1>
+            <section class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow p-6">
 
-    <!-- カートが空の場合 -->
-    <div th:if="${isEmpty}" class="text-center text-gray-500">
-        カートは空です
-    </div>
+                    <!-- タイトル -->
+                    <h1 class="text-2xl font-bold mb-6 text-center">
+                        ショッピングカート
+                    </h1>
 
-    <!-- カートに商品がある場合 -->
-    <div th:unless="${isEmpty}">
+                    <!-- カートが空 -->
+                    <div th:if="${isEmpty}" class="py-16 text-center">
 
-        <!-- 商品一覧 -->
-        <table class="w-full border-collapse">
-            <thead class="bg-gray-100">
-            <tr>
-                <th class="border p-2">商品名</th>
-                <th class="border p-2">単価</th>
-                <th class="border p-2">数量</th>
-                <th class="border p-2">小計</th>
-                <th class="border p-2">操作</th>
-            </tr>
-            </thead>
+                        <p class="text-lg font-semibold mb-2">
+                            カートに商品がありません
+                        </p>
 
-            <tbody>
-            <tr th:each="item : ${cartItems}">
-                <td class="border p-2" th:text="${item.name}"></td>
-                <td class="border p-2" th:text="${item.price} + '円'"></td>
-                <td class="border p-2 text-center" th:text="${item.quantity}"></td>
-                <td class="border p-2" th:text="${item.subtotal} + '円'"></td>
+                        <p class="text-gray-500 mb-6">
+                            気になる商品をカートに追加してください
+                        </p>
 
-                <!-- 操作ボタン -->
-                <td class="border p-2 text-center space-x-2">
+                        <a th:href="@{/products}"
+                           class="inline-block px-6 py-3 bg-blue-600 rounded-lg text-white hover:bg-blue-700 transition-colors">
+                            商品一覧を見る
+                        </a>
 
-                    <!-- 数量 +1 -->
-                    <form th:action="@{/cart/change}" method="post" class="inline">
-                        <input type="hidden" name="productId" th:value="${item.id}">
-                        <input type="hidden" name="changeQuantity" value="1">
-                        <button class="px-2 py-1 bg-gray-400
-                        hover:bg-gray-700 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
-                        th:disabled="${item.quantity >= item.stock}">
-                            ＋
-                        </button>
-                    </form>
+                    </div>
 
-                    <!-- 数量 -1 -->
-                    <form th:action="@{/cart/change}" method="post" class="inline">
-                        <input type="hidden" name="productId" th:value="${item.id}">
-                        <input type="hidden" name="changeQuantity" value="-1">
-                        <button class="px-2 py-1 bg-gray-400 hover:bg-gray-700 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
-                        th:disabled="${item.quantity <= 1}">
-                            −</button>
-                    </form>
 
-                    <!-- 削除 -->
-                    <form th:action="@{/cart/change}" method="post" class="inline">
-                        <input type="hidden" name="productId" th:value="${item.id}">
-                        <input type="hidden" name="changeQuantity" th:value="${-item.quantity}">
-                        <button class="px-2 py-1 bg-gray-400 hover:bg-gray-700 text-white rounded">
-                            削除
-                        </button>
-                    </form>
+                    <!-- カートに商品がある -->
+                    <div th:unless="${isEmpty}">
 
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                        <!-- 商品一覧 -->
+                        <table class="w-full border-collapse mb-6">
+                            <thead class="bg-gray-100">
+                            <tr>
+                                <th class="border p-2">商品名</th>
+                                <th class="border p-2">単価</th>
+                                <th class="border p-2">数量</th>
+                                <th class="border p-2">小計</th>
+                                <th class="border p-2">操作</th>
+                            </tr>
+                            </thead>
 
-        <!-- 合計金額 -->
-        <div class="text-right mt-6 text-xl font-bold">
-            合計：<span th:text="${totalAmount} + '円'"></span>
-        </div>
-    </div>
+                            <tbody>
+                            <tr th:each="item : ${cartItems}">
+                                <td class="border p-2" th:text="${item.name}"></td>
+                                <td class="border p-2" th:text="${item.price} + '円'"></td>
+                                <td class="border p-2 text-center" th:text="${item.quantity}"></td>
+                                <td class="border p-2" th:text="${item.subtotal} + '円'"></td>
 
-    <a href="/products" class="px-4 py-2 bg-blue-300 text-white rounded-lg shadow hover:bg-blue-700 transition">
-        商品一覧へ
-    </a>
+                                <td class="border p-2 text-center space-x-2">
 
-    <form th:action="@{/checkout/start}" method="post" class="inline">
-         <button class="px-4 py-2 bg-blue-700 rounded-lg hover:bg-blue-1000 text-white">
-            注文確定
-        </button>
-    </form>
-</div>
+                                    <!-- + -->
+                                    <form th:action="@{/cart/change}" method="post" class="inline">
+                                        <input type="hidden" name="productId" th:value="${item.id}">
+                                        <input type="hidden" name="changeQuantity" value="1">
+                                        <button
+                                                class="px-2 py-1 bg-gray-400 hover:bg-gray-700
+                                                   text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                                th:disabled="${item.quantity >= item.stock}">
+                                            ＋
+                                        </button>
+                                    </form>
+
+                                    <!-- - -->
+                                    <form th:action="@{/cart/change}" method="post" class="inline">
+                                        <input type="hidden" name="productId" th:value="${item.id}">
+                                        <input type="hidden" name="changeQuantity" value="-1">
+                                        <button
+                                                class="px-2 py-1 bg-gray-400 hover:bg-gray-700
+                                                   text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                                th:disabled="${item.quantity <= 1}">
+                                            −
+                                        </button>
+                                    </form>
+
+                                    <!-- 削除 -->
+                                    <form th:action="@{/cart/change}" method="post" class="inline">
+                                        <input type="hidden" name="productId" th:value="${item.id}">
+                                        <input type="hidden" name="changeQuantity" th:value="${-item.quantity}">
+                                        <button class="px-2 py-1 bg-gray-400 hover:bg-gray-700 text-white rounded">
+                                            削除
+                                        </button>
+                                    </form>
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- 合計金額 -->
+                        <div class="text-right text-xl font-bold mb-6">
+                            合計：
+                            <span th:text="${totalAmount} + '円'"></span>
+                        </div>
+
+                        <!-- 操作 -->
+                        <div class="flex justify-between items-center">
+                            <a th:href="@{/products}"
+                               class="px-4 py-2 bg-gray-300 text-white rounded hover:bg-gray-400 transition">
+                                商品一覧へ
+                            </a>
+
+                            <form th:action="@{/checkout/start}" method="post">
+                                <button
+                                        class="px-6 py-3 bg-blue-600 text-white rounded
+                                           hover:bg-blue-700 transition-colors">
+                                    注文確定
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+
     </div>
 </div>
 </body>

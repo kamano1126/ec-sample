@@ -1,20 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>登録完了</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-green-100">
 
-<div class="max-w-md mx-auto mt-20 p-6 bg-white rounded shadow">
-    <h1 class="text-xl font-bold mb-4 text-center text-green-600">
-        登録が完了しました！
-    </h1>
-    <a href="/users/login"
-       class="block text-center mt-4 bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-        ログイン画面へ
-    </a>
+<body class="bg-gray-100 text-gray-800">
+<div th:replace="layout/layout :: layout(~{::content})">
+    <div th:fragment="content">
+
+        <main class="max-w-7xl mx-auto px-6 py-10">
+
+            <section class="max-w-md mx-auto mt-16">
+                <div class="bg-white rounded-lg shadow p-8 text-center">
+
+                    <h1 class="text-2xl font-bold text-green-600 mb-4">
+                        登録が完了しました
+                    </h1>
+
+                    <p class="text-gray-600 mb-8">
+                        ご登録ありがとうございます。<br>
+                        ログインしてお買い物をお楽しみください。
+                    </p>
+
+                    <a th:href="@{/users/login}"
+                       class="block w-full bg-blue-600 text-white py-3 rounded
+                              hover:bg-blue-700 transition-colors">
+                        ログイン画面へ
+                    </a>
+
+                </div>
+            </section>
+
+        </main>
+
+    </div>
 </div>
 </body>
 </html>
