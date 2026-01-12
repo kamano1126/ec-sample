@@ -1,5 +1,6 @@
 package com.example.ec_sample.service;
 
+import com.example.ec_sample.domain.user.Role;
 import com.example.ec_sample.domain.user.User;
 import com.example.ec_sample.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +22,26 @@ public class UserService {
         //パスワードをハッシュ化する
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        user.setRole(Role.USER);     // ← これ！！
+        user.setIsAdmin(false);
         return userRepository.save(user);
-
     }
 
-    public boolean login(String email,String rawPassword){
+    public User login(String email, String rawPassword) {
         User user = userRepository.findByEmail(email);
 
-        if(user == null) {
-            return false;
+        if (user == null) {
+            return null;
         }
 
-        return passwordEncoder.matches(rawPassword,user.getPassword());
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+            return null;
+        }
+
+        return user;
+
     }
+
 
 
 

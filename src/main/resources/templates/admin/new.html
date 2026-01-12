@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>新規商品作成</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield; /* Firefox */
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<div th:replace="layout/layout :: layout(~{::content})">
+    <div th:fragment="content">
+
+        <div class="container mx-auto px-4 py-8 max-w-2xl">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">新規商品作成</h1>
+
+            <form th:action="@{/admin/create}"
+                  th:object="${product}"
+                  method="post" enctype="multipart/form-data"
+                  class="bg-white shadow rounded-lg p-6 space-y-4">
+
+                <!-- 商品名 -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">商品名</label>
+                    <input type="text" name="name"
+                           th:field="*{name}"
+                           th:classappend="${#fields.hasErrors('name')} ? 'border-red-500' : '' "
+                           class="w-full border rounded px-3 py-2">
+                    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+                <!-- 価格 -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">価格</label>
+                    <input type="number" name="price"
+                           th:field="*{price}"
+                           th:classappend="${#fields.hasErrors('price')} ? 'border-red-500' : ''"
+                           class="w-full border rounded px-3 py-2">
+                    <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+
+                <!-- 在庫 -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">在庫</label>
+                    <input type="number" name="stock"
+                           th:field="*{stock}"
+                           th:classappend="${#fields.hasErrors('stock')} ? 'border-red-500' : ''"
+                           class="w-full border rounded px-3 py-2">
+                    <p th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}" class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+
+                <!-- サイズ -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">サイズ</label>
+                    <input type="text" name="size"
+                           th:field="*{size}"
+                           th:classappend="${#fields.hasErrors('size')} ? 'border-red-500' : ''"
+                           class="w-full border rounded px-3 py-2">
+                    <p th:if="${#fields.hasErrors('size')}" th:errors="*{size}" class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+
+                <!-- カテゴリ（Enum） -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">カテゴリ</label>
+                    <select name="category"
+                            th:field="*{category}"
+                            th:classappend="${#fields.hasErrors('category')} ? 'border-red-500' : ''"
+                            class="w-full border rounded px-3 py-2">
+                        <option th:each="c : ${categories}" th:value="${c}" th:text="${c}"></option>
+                    </select>
+                    <p th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+
+                <!-- ブランド（Enum） -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">ブランド</label>
+                    <select name="brand"
+                            th:field="*{brand}"
+                            th:classappend="${#fields.hasErrors('brand')} ? 'border-red-500' : ''"
+                            class="w-full border rounded px-3 py-2">
+                        <option th:each="b : ${brands}" th:value="${b}" th:text="${b}"></option>
+                    </select>
+                    <p th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}" class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+
+                <!-- 年代（Enum） -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">年代</label>
+                    <select name="period"
+                            th:field="*{period}"
+                            th:classappend="${#fields.hasErrors('period')} ? 'border-red-500' : ''"
+                            class="w-full border rounded px-3 py-2">
+                        <option th:each="p : ${periods}" th:value="${p}" th:text="${p}"></option>
+                    </select>
+                    <p th:if="${#fields.hasErrors('period')}" th:errors="*{period}" class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+                <!-- 登録日 -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">登録日</label>
+                    <input type="date" name="joinDate"
+                           th:field="*{joinDate}"
+                           th:classappend="${#fields.hasErrors('joinDate')} ? 'border-red-500' : ''"
+                           class="w-full border rounded px-3 py-2">
+                    <p th:if="${#fields.hasErrors('joinDate')}" th:errors="*{joinDate}" class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+
+                <!-- 説明 -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">説明</label>
+                    <textarea name="description" rows="5"
+                           th:field="*{description}"
+                           th:classappend="${#fields.hasErrors('description')} ? 'border-red-500' : ''"
+                              class="w-full border rounded px-3 py-2"></textarea>
+                    <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+
+                <!-- 画像 -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">画像</label>
+                    <div class="mb-2">
+                        <img th:if="${product.imagePath != null}"
+                             th:src="@{${product.imagePath}}"
+                             alt="商品画像"
+                             class="w-32 h-32 object-cover rounded">
+                    </div>
+                    <input type="file" name="image"
+                           th:classappend="${#fields.hasGlobalErrors()} ? 'border-red-500' : ''"
+                           class="w-full border rounded px-3 py-2"
+                           accept="image/*">
+                    <p th:each="err : ${#fields.globalErrors()}"
+                       th:text="${err}"
+                       class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+
+                <!-- ボタン -->
+                <div class="flex justify-end space-x-2">
+                    <a th:href="@{/admin/products}"
+                       class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                        戻る
+                    </a>
+                    <button type="submit"
+                            class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                        作成
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

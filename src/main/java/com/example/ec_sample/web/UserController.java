@@ -1,13 +1,17 @@
 package com.example.ec_sample.web;
 
 import com.example.ec_sample.domain.user.User;
+import com.example.ec_sample.domain.user.UserRepository;
+import com.example.ec_sample.service.product.ProductService;
 import com.example.ec_sample.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final ProductService productService;
+    private final UserRepository userRepository;
 
     @GetMapping("/register")
     public String showRegisterForm(Model model){
@@ -25,42 +31,55 @@ public class UserController {
     @PostMapping("/register")
     public String registerUser(@Valid User user,
                                BindingResult bindingResult,
-                               Model model){
+                               Model model,
+                               HttpSession session){
         if(bindingResult.hasErrors()){
             return "user/register";
         }
 
         try{
             userService.register(user);
+
+            Boolean checkout = (Boolean) session.getAttribute("checkoutInProgress");
+
+            if(Boolean.TRUE.equals(checkout)){
+                session.removeAttribute("checkoutInProgress");
+                return "redirect:/users/register/success";
+            }
         }catch (IllegalArgumentException e){
             model.addAttribute("emailError",e.getMessage());
             return "user/register";
         }
-        System.out.println("POST /register を通過");
         return "redirect:/users/register/success";
     }
 
-    /*
-    @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user) {
-        System.out.println("【DEBUG】UserController の POST /users/register が呼ばれました！");
-        System.out.println("【DEBUG】リダイレクト先は /users/register/success のはずです！");
-
-
-
-        return "redirect:/users/register/success";
-    }
-*/
     @GetMapping("/login")
     public String showLoginForm(Model model){
         return "user/login";
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam String email,@RequestParam String password, Model model) {
+    public String loginUser(@RequestParam String email,
+                            @RequestParam String password,
+                            HttpSession session,
+                            Model model,
+                            RedirectAttributes redirectAttributes) {
+
+        User loginUser = userService.login(email,password);
 
         //emailとpasswordの値がtrueならホーム画面に戻る
-        if (userService.login(email, password)) {
+        if (loginUser != null) {
+            User freshUser = userRepository.findById(loginUser.getId()).get();
+            session.setAttribute("loginUser", freshUser);
+
+            Boolean checkout = (Boolean) session.getAttribute("checkoutInProgress");
+
+            if (Boolean.TRUE.equals(checkout)){
+                session.removeAttribute("checkoutInProgress");
+                return "forward:/order/confirm/submit";
+            }
+
+            redirectAttributes.addFlashAttribute("toast", "login");
             return "redirect:/";
         }
 
@@ -71,7 +90,14 @@ public class UserController {
         return "user/login";
     }
 
-//登録成功画面を表示する
+    @GetMapping("/logout")
+    public String logout(HttpSession session,
+                         RedirectAttributes redirectAttributes){
+        session.invalidate();//セッションを破棄する
+        redirectAttributes.addFlashAttribute("toast","logout");
+        return "redirect:/";
+    }
+
     @GetMapping("/register/success")
     public String registerSuccess() {
         return "user/success";

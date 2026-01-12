@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title th:text="${title} ?: 'EC Sample'">EC Sample</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+<div th:fragment="layout(content)">
+<!-- ===================== -->
+<!-- Header -->
+<!-- ===================== -->
+<header th:replace="layout/header :: siteHeader"></header>
+
+<!-- Toast
+ -->
+<div th:if="${toast != null}">
+    <div th:replace="layout/toast :: toast"></div>
+</div>
+
+<!-- ===================== -->
+<!-- Main Content -->
+<!-- ===================== -->
+<main class="flex-1 container mx-auto px-4 py-6">
+
+    <!-- 各画面の内容を差し込む -->
+    <div th:replace="${content}"></div>
+
+</main>
+
+
+<!-- ===================== -->
+<!-- Footer -->
+<!-- ===================== -->
+<footer class="bg-white border-t">
+    <div class="container mx-auto px-4 py-4 text-center text-sm text-gray-500">
+        © 2025 EC Sample
+    </div>
+</footer>
+</div>
+</body>
+</html>

@@ -1,26 +1,83 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>商品詳細</title>
+    <title th:text="${product.name}">商品詳細</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<table border="1">
-    <div th:replace="layout/header :: siteHeader"></div>
-    <h1 th:text ="${product.id} + 'の詳細'"></h1>
-    <tr>
-        <th>ID</th><td th:text="${product.id}"></td>
-    </tr>
-    <tr>
-        <th>商品名</th><td th:text="${product.name}"></td>
-    </tr>
-    <tr>
-        <th>価格</th><td th:text="${product.price} + '円'"></td>
-    </tr>
-    <tr>
-        <th>説明</th><td th:text="${product.description}"></td>
-    </tr>
-</table>
-<p><a href="/products">←　商品一覧に戻る</a></p>
+<body class="bg-gray-50">
+
+<div th:replace="layout/layout :: layout(~{::content})">
+    <div th:fragment="content">
+
+        <div class="max-w-5xl mx-auto px-4 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 bg-white rounded-xl shadow p-6">
+
+                <!-- 左：画像 -->
+                <div class="w-full aspect-square bg-gray-200 overflow-hidden rounded-lg">
+                    <img th:src="${product.imagePath}"
+                         alt="商品画像"
+                         class="w-full h-full object-cover"/>
+                </div>
+
+                <!-- 右：情報 -->
+                <div class="flex flex-col justify-between">
+
+                    <div>
+                        <!-- カテゴリ -->
+                        <div class="text-sm text-gray-500 mb-2"
+                             th:text="${product.category}"></div>
+
+                        <!-- 商品名 -->
+                        <h1 class="text-3xl font-bold mb-4"
+                            th:text="${product.name}"></h1>
+
+                        <!-- 説明 -->
+                        <p class="text-gray-700 leading-relaxed mb-6"
+                           th:text="${product.description}"></p>
+
+                        <!-- 価格 -->
+                        <div class="text-2xl font-bold mb-6">
+                            <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                            <span class="text-base font-normal">円（税込）</span>
+                        </div>
+                    </div>
+
+                    <!-- 購入エリア -->
+                    <div>
+                        <div th:if="${product.stock > 0}">
+                            <form th:action="@{/cart/add}" method="post">
+                                <input type="hidden" name="productId" th:value="${product.id}">
+                                <input type="hidden" name="addQuantity" value="1">
+
+                                <button type="submit"
+                                        class="w-full bg-green-500 hover:bg-green-600
+                                           text-white py-3 rounded-lg text-lg transition">
+                                    カートに追加
+                                </button>
+                            </form>
+                        </div>
+
+                        <div th:if="${product.stock == 0}">
+                            <button class="w-full bg-gray-400 text-white py-3 rounded-lg" disabled>
+                                売り切れ
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 戻る -->
+            <div class="mt-8">
+                <a href="/products" class="text-blue-600 hover:underline">
+                    ← 商品一覧に戻る
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 </body>
 </html>

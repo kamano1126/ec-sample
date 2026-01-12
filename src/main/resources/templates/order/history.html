@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>注文履歴</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50">
+<div th:replace="layout/layout :: layout(~{::content})">
+    <div th:fragment="content">
+<div class="max-w-5xl mx-auto py-10 px-4">
+
+    <h1 class="text-2xl font-bold mb-6">注文履歴</h1>
+
+    <!-- 注文がない場合 -->
+    <p th:if="${#lists.isEmpty(orders)}"
+       class="text-gray-500">
+        注文履歴はありません
+    </p>
+
+    <!-- 注文一覧 -->
+    <div th:each="order : ${orders}"
+         class="bg-white rounded-lg shadow mb-6 p-6">
+
+        <!-- 上段：注文情報 -->
+        <div class="flex justify-between items-center mb-4">
+
+            <div>
+                <p class="text-sm text-gray-500">
+                    注文番号：
+                    <span class="font-medium" th:text="${order.id}"></span>
+                </p>
+
+                <p class="text-sm text-gray-500">
+                    注文日時：
+                    <span th:text="${#temporals.format(order.createdAt, 'yyyy/MM/dd HH:mm')}"></span>
+                </p>
+            </div>
+
+            <!-- ステータス -->
+            <span class="px-3 py-1 rounded text-sm font-semibold"
+                  th:text="${order.status.label}"
+                  th:classappend="
+                    ${order.status.name() == 'CREATED'} ? ' bg-gray-200 text-gray-700' :
+                    (${order.status.name() == 'PAID'} ? ' bg-yellow-100 text-yellow-700' :
+                    (${order.status.name() == 'SHIPPED'} ? ' bg-green-100 text-green-700' :
+                    ' bg-red-100 text-red-700'))
+                  ">
+            </span>
+        </div>
+
+        <!-- 商品一覧 -->
+        <table class="w-full text-sm border-collapse mb-4">
+            <thead>
+            <tr class="bg-gray-100">
+                <th class="border p-2 text-left">商品名</th>
+                <th class="border p-2 text-right">単価</th>
+                <th class="border p-2 text-center">数量</th>
+                <th class="border p-2 text-right">小計</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="item : ${order.orderItems}">
+                <td class="border p-2" th:text="${item.product.name}"></td>
+                <td class="border p-2 text-right">
+                    <span th:text="${item.price}"></span> 円
+                </td>
+                <td class="border p-2 text-center" th:text="${item.quantity}"></td>
+                <td class="border p-2 text-right font-semibold">
+                    <span th:text="${item.price * item.quantity}"></span> 円
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 下段：合計＆操作 -->
+        <div class="flex justify-between items-center">
+
+            <p class="text-lg font-bold">
+                合計：
+                <span th:text="${order.totalAmount}"></span> 円
+            </p>
+
+            <div class="flex gap-3">
+
+                <!-- 詳細 -->
+                <a th:href="@{/order/{id}(id=${order.id})}"
+                   class="px-4 py-2 border rounded hover:bg-gray-100">
+                    詳細
+                </a>
+
+                <!-- キャンセルボタン -->
+                <form th:if="${order.status.name() == 'CREATED' || order.status.name() == 'PAID'}"
+                      th:action="@{/order/{id}/cancel(id=${order.id})}"
+                      method="post"
+                      onsubmit="return confirm('この注文をキャンセルしますか？');">
+
+                    <button class="bg-red-500 text-white px-4 py-2 rounded text-center hover:bg-red-600">
+                        キャンセル
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+
+</body>
+</html>
