@@ -1,4 +1,4 @@
-# EC Sample Application
+# EC Application
 
 **Spring Boot / Java ポートフォリオ**
 
