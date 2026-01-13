@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>アカウント確認</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+<div th:replace="layout/layout :: layout(~{::content})">
+    <div th:fragment="content">
+
+        <main class="max-w-7xl mx-auto px-6 py-10">
+
+            <section class="max-w-md mx-auto mt-16">
+                <div class="bg-white rounded-lg shadow p-8 text-center">
+
+                    <h1 class="text-2xl font-bold mb-6">
+                        ご注文には<br>アカウントが必要です
+                    </h1>
+
+                    <div class="space-y-4 mb-6">
+                        <a th:href="@{/users/login}"
+                           class="block w-full bg-blue-600 text-white py-3 rounded
+                                  hover:bg-blue-700 transition-colors">
+                            ログインする
+                        </a>
+
+                        <a th:href="@{/users/register}"
+                           class="block w-full bg-green-600 text-white py-3 rounded
+                                  hover:bg-green-700 transition-colors">
+                            新規登録する
+                        </a>
+                    </div>
+
+                    <a th:href="@{/cart}"
+                       class="text-sm text-gray-500 underline hover:text-gray-700">
+                        カートに戻る
+                    </a>
+
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+</div>
+</body>
+</html>

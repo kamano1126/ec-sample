@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>注文一覧</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<div th:replace="layout/layout :: layout(~{::content})">
+    <div th:fragment="content">
+
+
+<div class="max-w-6xl mx-auto mt-10 bg-white shadow rounded-lg p-6">
+
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">
+        注文一覧（管理者）
+    </h1>
+
+    <form method="get"
+          class="flex flex-wrap items-end gap-4 mb-6"
+          th:actioin="@{/admin/order/list}">
+        <div>
+            <select name="sort" class="border rounded px-3 py-2">
+                <option value="" th:selected="${sort == null}">新着順</option>
+                <option value="status_asc" th:selected="${sort == status_asc}">ステータス順</option>
+            </select>
+        </div>
+
+        <div>
+            <select name="status" class="border rounded px-3 py-2">
+                <option value="">すべての注文</option>
+                <option th:each="s : ${statuses}"
+                        th:value="${s}"
+                        th:selected="${s == status}"
+                        th:text="${s.label}">
+                </option>
+            </select>
+        </div>
+
+        <button type="submit"
+                class="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800">
+            適用
+        </button>
+
+    </form>
+
+    <div th:if="${isEmpty}" class="text-gray-400 text-center">
+        注文がありません
+    </div>
+    <div th:unless="${isEmpty}" class="text-gray text-center">
+        <table class="w-full border-collapse">
+            <thead class="bg-gray-50 text-gray-700 text-sm">
+            <tr>
+                <th class="border px-4 py-2 text-left">注文ID</th>
+                <th class="border px-4 py-2 text-left">購入者</th>
+                <th class="border px-4 py-2 text-right">合計金額</th>
+                <th class="border px-4 py-2 text-left">注文日時</th>
+                <th class="border px-4 py-2 text-left">ステータス</th>
+                <th class="border px-4 py-2 text-center">詳細</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="order : ${orders}"
+                class="hover:bg-gray-50 transition">
+                <td class="border px-4 py-2" th:text="${order.id}"></td>
+                <td class="border px-4 py-2" th:text="${order.user != null ? order.user.username : '---'}"></td>
+                <td class="border px-4 py-2 text-right"
+                    th:text="${order.totalAmount} + '円'"></td>
+                <td class="border px-4 py-2"
+                    th:text="${#temporals.format(order.createdAt, 'yyyy/MM/dd HH:mm')}"></td>
+                <td class="p-3 text-center">
+                <span class="px-3 py-1 rounded text-xs font-semibold"
+                      th:text="${order.status.label}"
+                      th:classappend="
+                        ${order.status.name() == 'CREATED'} ? ' bg-gray-200 text-gray-700' :
+                        (${order.status.name() == 'PAID'} ? ' bg-yellow-100 text-yellow-700' :
+                        (${order.status.name() == 'SHIPPED'} ? ' bg-green-100 text-green-700' :
+                        ' bg-red-100 text-red-700'))
+                      ">
+                </span>
+                </td>
+                <td class="border px-4 py-2 text-center">
+                    <a th:href="@{/admin/order/{id}(id=${order.id})}"
+                       class="text-blue-600 hover:underline text-sm">
+                        詳細
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+    </div>
+    </div>
+</body>
+</html>

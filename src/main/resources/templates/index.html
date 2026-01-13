@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org " xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>EC Sample</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+<div th:replace="layout/layout :: layout(~{::content})">
+    <div th:fragment="content">
+<!-- ================= メイン ================= -->
+<main class="max-w-7xl mx-auto px-6 py-10">
+
+    <section class="mb-12 text-center">
+        <h2 class="text-4xl font-bold mb-4">Kamakama Vintage Clothing Store</h2>
+        <p class="text-gray-600">
+            ヴィンテージからレギュラーまで
+        </p>
+    </section>
+
+
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">新商品</h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <a th:each="product : ${products}"
+                 th:href="@{/products/{id}(id=${product.id})}"
+                 class="group block bg-white rounded-lg shadow-md
+                   overflow-hidden hover:shadow-lg
+                   transition-shadow relative">
+
+                <!-- 商品画像プレースホルダー -->
+                <div class="w-full h-64 bg-gray-300 flex items-center justify-center overflow-hidden">
+                    <img th:src="${product.imagePath}"
+                         alt="商品画像"
+                         class="w-full h-full object-cover
+                             group-hover:scale-105 transition-transform duration-300"/>
+                </div>
+
+                <!-- 商品情報 -->
+                <div class="p-4">
+                    <!-- カテゴリ -->
+                    <div class="text-xs font-semibold text-gray-600 uppercase mb-2" th:text="${product.category}"></div>
+
+                    <!-- 商品説明 -->
+                    <div class="text-sm text-gray-900 mb-3 line-clamp-3" th:text="${product.description}"></div>
+
+                    <!-- 価格 -->
+                    <div class="text-lg font-bold text-gray-900 mb-4">
+                        <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                        <span class="text-sm font-normal">円</span>
+                        <span class="text-sm font-normal text-gray-600">(税込)</span>
+                    </div>
+
+                    <!-- ボタン -->
+                    <div th:if="${product.stock != null and product.stock > 0}">
+                        <form th:action="@{/cart/add}" method="post">
+                            <input type="hidden" name="productId" th:value="${product.Id}">
+                            <input type="hidden" name="addQuantity" value="1">
+
+                            <button type="submit" class="w-full bg-green-400 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition-colors">
+                                カートに追加
+                            </button>
+                        </form>
+                    </div>
+                    <div th:if="${product.stock == null or product.stock == 0}">
+                        <button class="w-full bg-gray-400 text-white font-medium py-2 px-4 rounded cursor-not-allowed" disabled>
+                            売り切れ
+                        </button>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</main>
+</div>
+</div>
+</body>
+</html>

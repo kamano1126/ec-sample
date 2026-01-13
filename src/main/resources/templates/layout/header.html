@@ -1,7 +1,72 @@
 <header th:fragment="siteHeader" xmlns:th="http://www.thymeleaf.org">
-    <nav style="background-color: #f5f5f5; padding: 10px;">
-        <a href="/" style="margin-right: 20px;">Home</a>
-        <a href="/products" style="margin-right: 20px;">商品一覧</a>
-        <a href="/users" style="margin-right: 20px;">ユーザー登録</a>
+    <nav class="bg-white shadow-sm border-b text-gray-800 font-semibold text-lg transition-colors">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex h-16 items-center justify-between">
+
+                <!-- 左：メインナビ -->
+                <div class="flex items-center gap-8">
+
+                    <!-- 未ログイン -->
+                    <div th:if="${session.loginUser == null}" class ="flex items-center gap-4">
+                        <a href="/" class="nav-item hover:text-blue-600">🏠 ホーム</a>
+                        <a href="/products" class="nav-item hover:text-blue-600">👘 商品一覧</a>
+                        <a href="/cart" class="nav-item hover:text-blue-600">🛒 カート</a>
+                    </div>
+
+                    <!-- 一般ユーザー -->
+                    <div th:if="${session.loginUser != null and session.loginUser.role.name() == 'USER'}"
+                         class = "flex items-center gap-4">
+                        <a href="/" class="nav-item hover:text-blue-600">🏠 ホーム</a>
+                        <a href="/products" class="nav-item hover:text-blue-600">👘 商品一覧</a>
+                        <a href="/cart" class="nav-item hover:text-blue-600">🛒 カート</a>
+                        <a th:href="@{/orders}" class="text-gray-700 hover:text-blue-600">
+                        注文履歴
+                        </a>
+                    </div>
+
+                    <!-- 管理者 -->
+                    <div th:if="${session.loginUser != null and session.loginUser.role.name() == 'ADMIN'}"
+                         class = "flex items-center gap-4">
+                        <a href="/" class="nav-item hover:text-blue-600">🏠 ホーム</a>
+                        <a href="/products" class="nav-item hover:text-blue-600">👘 商品一覧</a>
+                        <a href="/cart" class="nav-item hover:text-blue-600">🛒 カート</a>
+                        <a href="/admin/order/list" class="nav-item hover:text-blue-600">注文一覧</a>
+                    </div>
+                </div>
+
+                <!-- 右：ユーザー操作 -->
+                <div class="flex items-center gap-6">
+
+                    <!-- 未ログイン -->
+                    <div th:if="${session.loginUser == null}" class="flex items-center gap-4">
+                        <a href="/users/register" class="nav-item hover:text-blue-600">👤 ユーザー登録</a>
+                        <a href="/users/login" class="nav-item hover:text-blue-600">ログイン</a>
+                    </div>
+
+                    <!-- 一般ユーザー -->
+                    <div th:if="${session.loginUser != null and session.loginUser.role.name() == 'USER'}"
+                         class="flex items-center gap-4">
+                        <span class="text-sm text-gray-700">
+                            ようこそ
+                            <span class="font-semibold" th:text="${session.loginUser.username}"></span>
+                            さん
+                        </span>
+                        <a href="/users/logout" class="nav-item">ログアウト</a>
+                    </div>
+
+                    <!-- 管理者 -->
+                    <div th:if="${session.loginUser != null and session.loginUser.role.name() == 'ADMIN'}"
+                         class="flex items-center gap-4">
+                        <a href="/admin/products"
+                           class="rounded-md bg-red-50 px-3 py-1.5 text-sm font-semibold text-red-600
+                           hover:bg-red-100 transition">
+                            管理者メニュー
+                        </a>
+                        <a href="/users/logout" class="nav-item hover:text-blue-600">ログアウト</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </nav>
 </header>
