@@ -16,7 +16,7 @@
                     <!-- 一般ユーザー -->
                     <div th:if="${session.loginUser != null and session.loginUser.role.name() == 'USER'}"
                          class = "flex items-center gap-4">
-                        <a href="/" class="nav-item hover:text-blue-600">🏠 ホーム1</a>
+                        <a href="/" class="nav-item hover:text-blue-600">🏠 ホーム</a>
                         <a href="/products" class="nav-item hover:text-blue-600">👘 商品一覧</a>
                         <a href="/cart" class="nav-item hover:text-blue-600">🛒 カート</a>
                         <a th:href="@{/orders}" class="text-gray-700 hover:text-blue-600">
@@ -27,7 +27,7 @@
                     <!-- 管理者 -->
                     <div th:if="${session.loginUser != null and session.loginUser.role.name() == 'ADMIN'}"
                          class = "flex items-center gap-4">
-                        <a href="/" class="nav-item hover:text-blue-600">🏠 ホーム2</a>
+                        <a href="/" class="nav-item hover:text-blue-600">🏠 ホーム</a>
                         <a href="/products" class="nav-item hover:text-blue-600">👘 商品一覧</a>
                         <a href="/cart" class="nav-item hover:text-blue-600">🛒 カート</a>
                         <a href="/admin/order/list" class="nav-item hover:text-blue-600">注文一覧</a>
