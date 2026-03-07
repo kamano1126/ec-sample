@@ -131,7 +131,7 @@ public class CartController {
 
         Product product = productService.findByID(productId);
 
-        int currentQuantity = cart.get(productId);
+        int currentQuantity = cart.getOrDefault(productId,0);
         int totalQuantity = cartService.changeItem(currentQuantity,changeQuantity);
 
         if (totalQuantity > product.getStock()){

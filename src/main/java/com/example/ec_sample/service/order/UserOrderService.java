@@ -26,6 +26,7 @@ public class UserOrderService {
     private final ProductService productService;
     private final OrderService orderService;
 
+    @Transactional
     public Long createOrder(User user, Map<Long, Integer> cart) {
 
         Order order = new Order();
@@ -65,6 +66,7 @@ public class UserOrderService {
         return order.getId();
     }
 
+    @Transactional
     public void markAsPaid(Long orderId){
         Order order = orderService.findById(orderId);
 
